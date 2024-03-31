@@ -10,9 +10,9 @@ const Button = ({children, variant, onClick, extra}) => {
         btnR: 'text-sm hidden lg:flex',
         btnLg: 'text-2xl',
         btnFull: 'w-full',
-        btnLink: 'w-full font-extrabold text-white bg-slate-400',
+        btnLink: 'w-full font-extrabold',
+        btnLinksm: 'font-semibold btn-link-sm text-white text-xs p-52',
         login: 'uppercase w-full text-white login-btn bg-violet-400',
-        google: 'flex text-sm justify-center items-center gap-3 w-full text-white bg-green-300'
     }
 
     const style = `${base} ${variantStyles[variant]} ${extra}`

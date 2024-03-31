@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Input({label, type, variantI, variantL, extraI, extraL}) {
+function Input({label, type, variantI, variantL, extraI, extraL, placeholder}) {
   const baseLabel = "w-full font-semibold"
   const baseInput = "p-2 input-base"
 
@@ -14,8 +14,8 @@ function Input({label, type, variantI, variantL, extraI, extraL}) {
     import: 'w-full h-auto',
     check: '',
     file: 'file',
+    date: 'date-input '
   }
-
 
   const stylesLabel = `${baseLabel} ${variantStylesLabel[variantL]} ${extraL}`
   const stylesInput = `${baseInput} ${variantStylesInput[variantI]} ${extraI}`
@@ -26,7 +26,7 @@ function Input({label, type, variantI, variantL, extraI, extraL}) {
       {variantI !== 'check' ? (
         <>
           <label className={stylesLabel}>{label}</label>
-          <input type={type} className={stylesInput}/>
+          <input type={type} className={stylesInput} placeholder={placeholder}/>
         </>
       ) : (
         <div className='check'>
