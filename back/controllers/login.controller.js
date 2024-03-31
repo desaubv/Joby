@@ -8,6 +8,7 @@ const UsersModel = require('../models/users.model');
 const PasskeysModel = require('../models/passkey.model');
 const passkeyModel = require('../models/passkey.model');
 const usersModel = require('../models/users.model');
+const CloudinaryHandler = require('../classes/CloudinaryHandler');
 
 const controller = {};
 
@@ -139,7 +140,7 @@ async function signinState1(req, res){
 }
 
 async function signinState2(req, res, userId){
-    const { success, body } = HTTPHandler.getBody(req, [ 'gender', 'disabilities' ]);
+    const { success, body } = HTTPHandler.getBody(req, [ 'gender', 'disabilities', 'ocupation' ]);
 
     if( success ) {
         const userHandler = new MongooseHandler(usersModel);
@@ -150,7 +151,8 @@ async function signinState2(req, res, userId){
 
                     userHandler.findByIdAndUpdate(userId,{
                         gender: body.gender,
-                        disabilities: body.disabilities
+                        disabilities: body.disabilities,
+                        ocupation: body.ocupation,
                     })
                     .then(user => HTTPHandler.okResponse(res, user))
                     .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
@@ -170,7 +172,7 @@ async function signinState2(req, res, userId){
 }
 
 async function signinState3(req, res, userId){
-    const { success, body } = HTTPHandler.getBody(req, [ 'experience' ]);
+    const { success, body } = HTTPHandler.getBody(req, [ 'experience', 'schoolRecord' ]);
 
     if( success ) {
         const userHandler = new MongooseHandler(usersModel);
@@ -181,6 +183,7 @@ async function signinState3(req, res, userId){
 
                     userHandler.findByIdAndUpdate(userId,{
                         experience: body.experience,
+                        schoolRecord: body.schoolRecord
                     })
                     .then(user => HTTPHandler.okResponse(res, user))
                     .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
@@ -206,18 +209,39 @@ async function signinState4(req, res, userId){
         const userHandler = new MongooseHandler(UsersModel);
 
         const userData = {}
-        if(pic != undefined) userData.pic = pic.data;
-        if(cv != undefined) userData.cv = fs.readFileSync(cv.tempFilePath);
+        if(pic != undefined) {
+            if(cv != undefined) userData.cv = fs.readFileSync(cv.tempFilePath);
 
-        userHandler.findByIdAndUpdate(userId, userData)
-            .then(user => {
-                HTTPHandler.okResponse(res, user);
-                FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
-            })
-            .catch(err => {
-                HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' });
-                FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
-            });
+            CloudinaryHandler.uploadFile(pic.tempFilePath)
+                .then(url => {
+                    userData.pic = url;
+
+                    userHandler.findByIdAndUpdate(userId, userData)
+                    .then(user => {
+                        HTTPHandler.okResponse(res, user);
+                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                    })
+                    .catch(err => {
+                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' });
+                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                    });
+                    
+                }).catch(err => {
+                    HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto' });
+                })
+        }else{
+            if(cv != undefined) userData.cv = fs.readFileSync(cv.tempFilePath);
+
+            userHandler.findByIdAndUpdate(userId, userData)
+                .then(user => {
+                    HTTPHandler.okResponse(res, user);
+                    FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                })
+                .catch(err => {
+                    HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' });
+                    FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                });
+        }
         
 
     }else{

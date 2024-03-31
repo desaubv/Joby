@@ -12,11 +12,9 @@ function Login(io) {
 
     router.route('/forgot/:state')
         .post( controller.forgotPassword )
-        
     
 
     return router;
-
 }
 
 module.exports = Login;
