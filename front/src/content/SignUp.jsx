@@ -10,7 +10,7 @@ function SignUp() {
       </div>
       <div className='bg-white signup-content p-14'>
         <div className='pb-8'>  
-          <Link to="/" className='text-sm'>¿Ya tienes cuenta? Inicia sesion aqui</Link>
+          <Link to="/login" className='text-sm'>¿Ya tienes cuenta? Inicia sesion aqui</Link>
         </div>
         <form action="/step1" method="" className='flex flex-col justify-center'>
           <div className='flex flex-col pb-10'>

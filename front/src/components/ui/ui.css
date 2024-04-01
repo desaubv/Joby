@@ -2,9 +2,9 @@
 
 /* BOTONES*/
 .btn {
-    padding: 10px 30px;
+    padding: 10px 24px;
     margin: 10px 0;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 1);
     border: 1px solid #000;
 }
@@ -71,7 +71,6 @@
         -2px -2px #c3a9e8,
         1px -1px #c3a9e8,
         -3.5px 1px #c3a9e8;
-    padding: 3px;
 }
 
 .facebook {
