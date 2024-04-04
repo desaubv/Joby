@@ -13,7 +13,7 @@ const CloudinaryHandler = require('../classes/CloudinaryHandler');
 const controller = {};
 
 function Login(io){
-
+    
     // Iniciar sesion
     controller.login = async(req, res) => {
         const { success, body } = HTTPHandler.getBody(req, [ 'email', 'password' ]);
@@ -31,23 +31,26 @@ function Login(io){
         
                         }else{
                             HTTPHandler.clientError(res, {
-                                message: 'Correo o contraseña incorrectos'
+                                message: 'Correo o contraseña incorrectos',
+                                type: HTTPHandler.TYPE.LOGIN
                             });
                         }
         
                     }else{
                         HTTPHandler.clientError(res, {
-                            message: 'Correo o contraseña incorrectos'
+                            message: 'Correo o contraseña incorrectos',
+                            type: HTTPHandler.TYPE.LOGIN
                         });
                         return;
                     }                
                 })
-                .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
         }else{
             HTTPHandler.clientError(res, {
                 message: "Correo o contraseña no ingresado correctamente",
-                requiredParams: body
+                requiredParams: body,
+                type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
             });
         }
             
@@ -70,7 +73,8 @@ function Login(io){
             case '5': signinState5(req, res, userId);
                         break;
             default: HTTPHandler.clientError(res, {
-                        message: `Parametro 'state=${state}' no valido`
+                        message: `Parametro 'state=${state}' no valido`,
+                        type: HTTPHandler.TYPE.WRONG_PARAMS
                     });
         }
     }
@@ -85,7 +89,8 @@ function Login(io){
             case '2': state2(req, res);
                 break;
             default: HTTPHandler.clientError(res, {
-                        message: `Parametro 'state=${state}' no valido`
+                        message: `Parametro 'state=${state}' no valido`,
+                        type: HTTPHandler.TYPE.WRONG_PARAMS
                     });
         }
     }
@@ -122,19 +127,21 @@ async function signinState1(req, res){
                         lastname: body.lastname,
                             password
                     }).then(data => HTTPHandler.okResponse(res, data))
-                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
                 }else{
                     HTTPHandler.clientError(res, { 
                             error: 'Email ya registrado', 
-                        message: `El correo electronico ${body.email} ya esta registrado, prueba con otro diferente` 
+                            message: `El correo electronico ${body.email} ya esta registrado, prueba con otro diferente`,
+                            type: HTTPHandler.TYPE.DEFAULT
                     });
                 }
-            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }else{
         HTTPHandler.clientError(res, {
             message: "Nombre, apellido, correo y/o contraseña no ingresado(s) correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 }
@@ -155,18 +162,19 @@ async function signinState2(req, res, userId){
                         ocupation: body.ocupation,
                     })
                     .then(user => HTTPHandler.okResponse(res, user))
-                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
                 }else{
-                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado' });
+                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado', type: HTTPHandler.TYPE.DEFAULT });
                 }
             })
-            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }else{
         HTTPHandler.clientError(res, {
             message: "Alguno de los valores no fue ingresado correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 }
@@ -186,17 +194,18 @@ async function signinState3(req, res, userId){
                         schoolRecord: body.schoolRecord
                     })
                     .then(user => HTTPHandler.okResponse(res, user))
-                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
                 }else{
-                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado' });
+                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado', type: HTTPHandler.TYPE.DEFAULT });
                 }
             })
-            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
     }else{
         HTTPHandler.clientError(res, {
             message: "Alguno de los valores no fue ingresado correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 }
@@ -222,12 +231,12 @@ async function signinState4(req, res, userId){
                         FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
                     })
                     .catch(err => {
-                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' });
+                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
                         FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
                     });
                     
                 }).catch(err => {
-                    HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto' });
+                    HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto', type: "CLOUDINARY" });
                 })
         }else{
             if(cv != undefined) userData.cv = fs.readFileSync(cv.tempFilePath);
@@ -238,7 +247,7 @@ async function signinState4(req, res, userId){
                     FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
                 })
                 .catch(err => {
-                    HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' });
+                    HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
                     FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
                 });
         }
@@ -247,7 +256,8 @@ async function signinState4(req, res, userId){
     }else{
         HTTPHandler.clientError(res, {
             message: "Alguno de los valores no fue ingresado correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 }
@@ -266,17 +276,18 @@ async function signinState5(req, res, userId){
                         description: body.description,
                     })
                     .then(user => HTTPHandler.okResponse(res, user))
-                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                    .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
                 }else{
-                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado' });
+                    HTTPHandler.clientError(res, { error: 'ID no encontrado', message: 'No se encontró un registro con el userId indicado', type: HTTPHandler.TYPE.DEFAULT });
                 }
             })
-            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
     }else{
         HTTPHandler.clientError(res, {
             message: "Alguno de los valores no fue ingresado correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 }
@@ -318,12 +329,13 @@ async function state1(req, res){
                                     }).catch((err) => {
                                         HTTPHandler.serverError(res, {
                                             message: "Ha ocurrido un error al enviar el correo",
-                                            error: err
+                                            error: err,
+                                            type: "EMAIL"
                                         });
                                     });
         
-                            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
-                        }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
+                        }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
                     
 
@@ -332,7 +344,7 @@ async function state1(req, res){
                         message: "Si el correo es correcto, se enviara un link para reiniciar la contraseña"
                     });
                 }
-            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }else{
         HTTPHandler.okResponse(res, {
@@ -352,7 +364,9 @@ async function state2(req, res){
             .then(passkey => {
                 if(passkey == null){
                     HTTPHandler.clientError(res, {
-                        message: "Passkey incorrecto o expirado"
+                        error: "Passkey incorrecto o expirado",
+                        message: "Intenta realizar el proceso nuevamente",
+                        type: HTTPHandler.TYPE.DEFAULT
                     });
                 }else{
                     const password = bcrypt.hashSync(body.newPassword, 5);
@@ -365,14 +379,15 @@ async function state2(req, res){
                             });
 
                             passkeyHandler.findOneAndDelete({ userId: user.id });
-                        }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                        }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
                 }
-            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }else{
         HTTPHandler.clientError(res, {
             message: "Correo, nueva contraseña o passkey no ingresado correctamente",
-            requiredParams: body
+            requiredParams: body,
+            type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
         });
     }
 

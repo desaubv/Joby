@@ -8,6 +8,7 @@ const schema = new Schema({
     content: { type: String, required: true },
     pic: { type: String, required: false },
     date: { type: String, required: true },
+    readen: { type: Boolean, required: true, default: false },
 },{
     timestamps: true
 });
