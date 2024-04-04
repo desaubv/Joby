@@ -1,6 +1,15 @@
-const fs = require('fs');
-
 class HTTPHandler  {
+
+    /* ATRIBUTOS PUBLICOS */
+    TYPE = {
+        UNCOMPLETE_PARAMS: "UNCOMPLETE_PARAMS",
+        WRONG_PARAMS: "WRONG_PARAMS",
+        LOGIN: "LOGIN",
+        DATABASE: "DATABASE",
+        DEFAULT: "DEFAULT",
+        FILE_ERROR: "FILE_ERROR"
+    }    
+
     /* METODOS PUBLICOS */
     // METODO OK
     okResponse( res, data, status=200 ) {

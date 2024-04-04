@@ -18,12 +18,13 @@ function Documents(io){
                     message: 'El archivo no se envió correctamente', 
                     error: {
                         message: "El parametro 'document' no fue recibido en el servidor"
-                    } 
+                    },
+                    type: HTTPHandler.TYPE.FILE_ERROR
                 }); 
         }else{
 
             if(!success){
-                HTTPHandler.clientError(res, { message: 'ID del usuario no enviado correctamente', requiredParams: body });
+                HTTPHandler.clientError(res, { message: 'ID del usuario no enviado correctamente', requiredParams: body, type: HTTPHandler.TYPE.WRONG_PARAMS  });
                 return;
             }
 
@@ -42,7 +43,7 @@ function Documents(io){
                 .then(data => {
                     HTTPHandler.okResponse(res, data);
                     fs.unlinkSync(document.tempFilePath);
-                }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+                }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
         }
         
     }
@@ -60,7 +61,7 @@ function Documents(io){
                 res.setHeader('Content-Type', data.type);
                 res.send(data.file);
 
-            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }
 
@@ -78,7 +79,7 @@ function Documents(io){
                     type: data.type
                 });
 
-            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos' }));
+            }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
     }
 

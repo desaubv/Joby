@@ -5,8 +5,9 @@ const cors = require('cors');
 const socketIo = require('socket.io');
 const cloudinary = require('cloudinary').v2;
 const fileUpload = require("express-fileupload");
-const Sockets = require('../classes/Sockets');
-const Database = require('../classes/Database');
+const Sockets = require('./Sockets');
+const Database = require('./Database');
+const Routes = require('./Routes')
 require('dotenv').config();
 
 class Server {
@@ -22,7 +23,9 @@ class Server {
         new Database();
         new Sockets( this.io );
         this.middlewares();
-        this.routes();
+        
+        // Rutas
+        new Routes(this.app, this.io);
     }
 
     middlewares(){
@@ -39,26 +42,6 @@ class Server {
             cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
             api_key: process.env.CLOUDINARY_API_KEY, 
             api_secret: process.env.CLOUDINARY_API_SECRET 
-        });
-    }
-
-    routes() {
-        // Index
-        this.app.get('/', (req, res) => {
-            res.send('Backend');
-        });
-
-        // Rutas
-        this.app.use('/api/login', require('../routes/login.route')(this.io));
-        this.app.use('/api/documents', require('../routes/documents.route')(this.io));
-        
-        // Rutas no configuradas mandar mensaje de error
-        this.app.use((req, res) => {
-            res.status(404).json({
-                message: 'Ruta no configurada',
-                method: req.method,
-                route:   req.originalUrl
-            });
         });
     }
 

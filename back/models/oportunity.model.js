@@ -1,6 +1,9 @@
 const {Schema, model} = require('mongoose');
 
 const schema = new Schema({
+    authorId: { type: String, requred: true },
+    enterpriseId: { type: String, requred: true },
+
     title: { type: String, requred: true },
     description: { type: String, requred: true },
     experience: { type: String, requred: false },

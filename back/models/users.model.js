@@ -17,6 +17,7 @@ const schema = new Schema({
     cv: { type: Buffer , required: false },
     
     description: { type: String, required: false },
+    enterpriseId: { type: String, required: false }
 },{
     timestamps: true
 });
