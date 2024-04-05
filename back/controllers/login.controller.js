@@ -8,7 +8,9 @@ const UsersModel = require('../models/users.model');
 const PasskeysModel = require('../models/passkey.model');
 const passkeyModel = require('../models/passkey.model');
 const usersModel = require('../models/users.model');
+const DocumentModel = require('../models/documents.model');
 const CloudinaryHandler = require('../classes/CloudinaryHandler');
+const documentsModel = require('../models/documents.model');
 
 const controller = {};
 
@@ -217,7 +219,101 @@ async function signinState4(req, res, userId){
         const { pic, cv } = FilesHandler.getAllFilesFromReq(req);
         const userHandler = new MongooseHandler(UsersModel);
 
-        const userData = {}
+        if(pic === undefined && cv == undefined){
+            userHandler.findByIdAndUpdate(userId, {})
+                .then(user => {
+                    HTTPHandler.okResponse(res, user);
+                    FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                })
+                .catch(err => {
+                    HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                    FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                });
+        }else if(pic === undefined && cv !== undefined){
+            const DocumentsHandler = new MongooseHandler(documentsModel);
+            
+            DocumentsHandler.findOneAndDelete({userId: userId}).then(() => {}).catch(() => {});
+            DocumentsHandler.create({
+                title: cv.name,
+                description: "Curriculum Vitae",
+                userId: userId,
+                type: cv.mimetype,
+                file: fs.readFileSync(cv.tempFilePath)  
+            }).then(doc => {
+                userHandler.findById(userId)
+                    .then(user => {
+                        HTTPHandler.okResponse(res, user);
+                        FilesHandler.deleteAllFilesFromArray([cv], 'tempFilePath');
+                    })
+                    .catch(err => {
+                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                        FilesHandler.deleteAllFilesFromArray([cv], 'tempFilePath');
+                    })
+            })
+            .catch(err => {
+                HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                FilesHandler.deleteAllFilesFromArray([cv], 'tempFilePath');
+            });
+
+        }else if(pic !== undefined && cv === undefined){
+
+            CloudinaryHandler.uploadFile(pic.tempFilePath)
+            .then(url => {
+                userHandler.findByIdAndUpdate(userId, { pic: url })
+                .then(user => {
+                    console.log(2);
+                    HTTPHandler.okResponse(res, user);
+                    FilesHandler.deleteAllFilesFromArray([pic], 'tempFilePath');
+                })
+                .catch(err => {
+                    HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                    FilesHandler.deleteAllFilesFromArray([pic], 'tempFilePath');
+                });
+                
+            }).catch(err => {
+                console.log(err);
+                HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto', type: "CLOUDINARY" });
+                FilesHandler.deleteAllFilesFromArray([pic], 'tempFilePath');
+            })
+
+        }else{
+            const DocumentsHandler = new MongooseHandler(documentsModel);
+
+            DocumentsHandler.findOneAndDelete({userId: userId}).then(() => {}).catch(() => {});
+            DocumentsHandler.create({
+                title: cv.name,
+                description: "Curriculum Vitae",
+                userId: userId,
+                type: cv.mimetype,
+                file: fs.readFileSync(cv.tempFilePath)  
+            }).then(doc => {
+                
+                CloudinaryHandler.uploadFile(pic.tempFilePath)
+                .then(url => {
+
+                    userHandler.findByIdAndUpdate(userId, { pic: url })
+                    .then(user => {
+                        HTTPHandler.okResponse(res, user);
+                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                    })
+                    .catch(err => {
+                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                    });
+                    
+                }).catch(err => {
+                    HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto', type: "CLOUDINARY" });
+                    FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                })
+
+            })
+            .catch(err => {
+                HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+            });
+        }
+
+        /*const userData = {}
         if(pic != undefined) {
             if(cv != undefined) userData.cv = fs.readFileSync(cv.tempFilePath);
 
@@ -250,7 +346,7 @@ async function signinState4(req, res, userId){
                     HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
                     FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
                 });
-        }
+        }*/
         
 
     }else{

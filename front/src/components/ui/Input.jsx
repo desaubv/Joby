@@ -26,11 +26,11 @@ function Input({label, type, variantI, variantL, extraI, extraL, placeholder, na
       {variantI !== 'check' ? (
         <>
           <label htmlFor={id} className={stylesLabel}>{label}</label>
-          <input id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
+          <input accept={accept} id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
         </>
       ) : (
         <div className='check'>
-          <input id={id} name={name} type={type} className={stylesCheck} onChange={onChange} value={value}/> 
+          <input accept={accept} id={id} name={name} type={type} className={stylesCheck} onChange={onChange} value={value}/> 
           <label htmlFor={id} className={stylesLabel}>{label}</label>
         </div>
       )}

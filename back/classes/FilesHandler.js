@@ -10,7 +10,7 @@ class FilesHandler{
 
     getAllFilesFromReq(req){
         const { files } = req;
-        if(files === undefined) return {}
+        if(files === undefined || files === null) return {}
 
         return files;
     }

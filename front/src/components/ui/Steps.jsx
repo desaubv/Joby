@@ -6,8 +6,8 @@ import './ui.css'
 import React, { useRef, useState } from 'react'
 import Swal from 'sweetalert2'
 import axiosHandler from '../../axiosHandler'
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+import Cropper, { ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 const disabilitiesList = [
   "Discapacidad visual",
@@ -291,8 +291,6 @@ export function Step3() {
   const [pdfFile, setPdfFile] = useState(null);
 
   const [urlImage, setUrlImage] = useState(null);
-  const [croppedImage, setCroppedImage] = useState('');
-  const [cropperReady, setCropperReady] = useState(false);
 
   const [dragging, setDragging] = useState(false);
 
@@ -326,8 +324,13 @@ export function Step3() {
     e.preventDefault();
     setDragging(false);
     const files = [...e.dataTransfer.files];
-    
-    if(files[0].type.startsWith('image/')){
+
+    if(files[0] === undefined){
+      Toast.fire({
+        title: `No se selecciono ninguna imagen`,
+        icon: "info"
+      })
+    }else if(files[0].type.startsWith('image/')){
       setPicFile(files[0]);
       setUrlImage(URL.createObjectURL(files[0]))
     }else if(files[0].type == "application/pdf"){
@@ -344,7 +347,12 @@ export function Step3() {
   const handleFileChange = (e, type) => {
     const {files} = e.target;
 
-    if(files[0].type.startsWith('image/')){
+    if(files[0] === undefined){
+      Toast.fire({
+        title: `No se selecciono ninguna imagen`,
+        icon: "info"
+      })
+    }else if(files[0].type.startsWith('image/')){
       setPicFile(files[0]);
       setUrlImage(URL.createObjectURL(files[0]))
     }else if(files[0].type == "application/pdf"){
@@ -358,17 +366,32 @@ export function Step3() {
 
   }
 
-  const handleCrop = () => {
-    if (cropperReady && cropperRef.current) {
-        const canvas = cropperRef.current.getCroppedCanvas();
-        canvas.toBlob((blob) => {
-            const croppedImageFile = new File([blob], 'cropped_image.jpg', { type: 'image/jpeg' });
-            setPicFile(croppedImageFile);
-            setUrlImage(null);
-        }, 'image/jpeg');
-    }
-  };
+  const selectFile = (id) => {
+    if(urlImage === null) document.getElementById(id).click()
+  }
 
+  const handleSubmit = () => {
+    const formData = new FormData();
+    if(picFile !== null) formData.append( "pic", picFile );
+    if(pdfFile !== null) formData.append( "cv", pdfFile );
+
+    axiosHandler.POST(`login/signin/${session._id}/4`, formData)
+      .then(data => {
+        localStorage.setItem('session', JSON.stringify(data));
+        window.location.href = "/step4"
+      }).catch(err => {})
+  }
+
+  const onCrop = () => {
+    const cropper = cropperRef.current?.cropper;
+    const canvas = cropper.getCroppedCanvas();
+
+    canvas.toBlob((blob) => {
+      const file = new File([blob], picFile.name, { type: picFile.type });
+      setPicFile(file);
+      setUrlImage(null);
+    })
+  };
 
 
   return (
@@ -383,61 +406,80 @@ export function Step3() {
 
       <div className='p-6 signup-card rounded-2xl mb-7'>
 
-        <label htmlFor='input-file-pic'>
 
           <p className='text-black text-xl font-extrabold mb-2'>Elige una foto de perfil</p>
-          <div className='dnd text-center w-3/4 m-auto'>
-            <Input accept="image/*" id='input-file-pic' variantI="file" label="Importa o selecciona una foto para tu perfil" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
-            <div className='w-full flex justify-center mt-3'>
-              <IconCamera className='w-1/5 h-auto'/>
-
-              {
-               urlImage !== null 
-               ? <div style={{ position: 'fixed', width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: "5", top: 0, left: 0, display: 'flex', justifyContent: 'center', alignItems: 'center',flexDirection: 'column'  }}>
-                  <div style={{ width: '80%', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <Cropper
-                      ref={cropperRef}
-                      src={urlImage}
-                      aspectRatio={1} // Proporción de aspecto del recorte (opcional)
-                      guides={true} // Muestra las guías de recorte (opcional)
-                      crop={handleCrop} // Función que se llama cuando se realiza el recorte (opcional)
-                      onInitialized={() => setCropperReady(true)}
-                      style={{ maxHeight: '80vh', height: 'min-content' }}
-                    />
-                  </div>
-                  {/* <Button variant="btnLink" extra='text-black back-btn' onClick={handleCrop}>Recortar</Button> */}
-                  <Button variant="btnLink" extra='text-black back-btn' onClick={() => { setPicFile(null); setUrlImage(null); }}>Cancelar</Button>
-                </div> 
-                : <></>
-              }
-
-            </div>
+          <div className='dnd text-center w-3/4 m-auto' style={{ cursor: 'pointer' }} onClick={(e) => selectFile("input-file-pic")} >
+                          
+            {
+              picFile === null
+              ? 
+              <>
+                <Input accept="image/*" id='input-file-pic' variantI="file" label="Importa o selecciona una foto para tu perfil" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
+                <div className='w-full flex justify-center mt-3'>
+                  <IconCamera className='w-1/4 h-auto'/>
+                </div>             
+              </> 
+              : 
+              <>
+              <Input accept="image/*" id='input-file-pic' variantI="file" label="Cambiar imagen seleccionada" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
+              <div className='w-full flex justify-center mt-3' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                <p><b>Imagen actual:</b> {picFile.name}</p>
+                <p><b>Tipo:</b> {picFile.type}</p>
+                <p><b>Peso:</b> {formatFileSize(picFile.size)}</p>
+                <IconCamera className='w-1/6 h-auto'/>
+              </div>
+              </>
+            }
+              
           </div>
-
-        </label>
-
+          {
+            picFile !== null
+            ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+                <Button variant="btnLink" extra='text-black back-btn' onClick={() => setPicFile(null)}>Quitar foto</Button>
+              </div>
+            : <></>
+          }
       </div>
 
 
       <div className='p-6 signup-card rounded-2xl mb-7'>
         <p className='text-black text-xl font-extrabold mb-2'>Importa tu CV</p>
-        
-        <div className='dnd text-center w-3/4 m-auto'>
-          <label htmlFor='input-file-pdf'>
+        <div className='dnd text-center w-3/4 m-auto' style={{ cursor: 'pointer' }} onClick={(e) => selectFile("input-file-pdf")}>
 
-            <Input id='input-file-pdf' accept=".pdf" variantI="file" label="Importa o selecciona tu currículum vitae" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
-            <div className='w-full flex justify-center mt-3'>
-              <IconFileCv className='w-1/5 h-auto'/>
-            </div>
+          {
+            pdfFile === null
+            ? 
+            <>
+              <Input id='input-file-pdf' accept=".pdf" variantI="file" label="Importa o selecciona tu currículum vitae" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
+              <div className='w-full flex justify-center mt-3'>
+                <IconFileCv className='w-1/4 h-auto'/>
+              </div>
+            </>
+            : 
+            <>
+              <Input id='input-file-pdf' accept=".pdf" variantI="file" label="Cambiar archivo seleccionado" type="file" extraL="text-black text-xl" extraI="text-xs hidden" onChange={handleFileChange}/>
+              <div className='w-full flex justify-center mt-3' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                <p><b>Archivo actual:</b> {pdfFile.name}</p>
+                <p><b>Tipo:</b> {pdfFile.type}</p>
+                <p><b>Peso:</b> {formatFileSize(pdfFile.size)}</p>
+                <IconFileCv className='w-1/6 h-auto'/>
+              </div>
+            </>
+          }
 
-          </label>
         </div>
-
+        {
+            pdfFile !== null
+            ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+                <Button variant="btnLink" extra='text-black back-btn' onClick={() => setPdfFile(null)}>Quitar archivo</Button>
+              </div>
+            : <></>
+          }
       </div>
 
 
       <div className='pt-5'>
-        <Button variant="btnLink" extra='text-white sig-btn'>Siguiente</Button>
+        <Button variant="btnLink" extra='text-white sig-btn' onClick={handleSubmit}>Siguiente</Button>
         <Link to='/step4'><Button variant="btnLink" extra='text-black omitir-btn'>Omitir</Button></Link>
         <Link to='/step2'><Button variant="btnLink" extra='text-black back-btn'>Atrás</Button></Link>
       </div>
@@ -447,6 +489,27 @@ export function Step3() {
         ? <div style={{ position: 'fixed', width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: "5", top: 0, left: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><p style={{ fontSize: 25, color: 'white' }}>Suelta el elemento aqui</p></div> 
         : <></>
       }
+
+      {
+        urlImage !== null 
+        ? <div style={{ position: 'fixed', width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: "5", top: 0, left: 0, display: 'flex', justifyContent: 'center', alignItems: 'center',flexDirection: 'column'  }}>
+            <div style={{ width: '80%', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                      
+            <Cropper
+              src={urlImage}
+              style={{ height: 400, width: "100%" }}
+              initialAspectRatio={1}
+              aspectRatio={1}
+              guides={true}
+              ref={cropperRef}
+            />
+
+            </div>
+            <Button variant="btnLink" extra='text-black back-btn' onClick={onCrop}>Recortar</Button> 
+            <Button variant="btnLink" extra='text-black back-btn' onClick={() => { setPicFile(null); setUrlImage(null); }}>Cancelar</Button>
+          </div> 
+          : <></>
+        }
 
     </div>
   )
@@ -480,4 +543,15 @@ export function Step4() {
       </div>
     </div>
   )
+}
+
+function formatFileSize(size) {
+  if (size === 0) return '0 Bytes';
+
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(size) / Math.log(k));
+
+  return parseFloat((size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
