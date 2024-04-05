@@ -3,76 +3,81 @@ import 'sweetalert2/src/sweetalert2.scss'
 import axios from 'axios'
 
 const Handler = {}
-const backend = 'http://localhost:8080/'
+const backend = 'http://192.168.100.86:8080/api/';
 
-Handler.modalGet = async(route) => {
-    axios.get(backend+route)
-        .then(data => {
-
-            console.log(data);
-
-            Swal.fire({
-                title: 'Error!',
-                text: 'Do you want to continue',
-                icon: 'error',
-                confirmButtonText: 'Cool'
-            })
-
-        }).catch(err => {
-
-            console.error(err)
-
-            Swal.fire({
-                title: 'Error!',
-                text: 'Do you want to continue',
-                icon: 'error',
-                confirmButtonText: 'Cool'
-            })
-        });
+const COLORS = {
+    warning: "#F7D900",
+    error: "#E4080A",
+    success: "#1CD537",
+    main: "#9C71D9",
+    second: "#8B65BF",
+    third: "#6B98F2"
 }
 
-Handler.modalPost = async(route, data) => {
-    axios.post(backend+route, data)
-        .then(data => {
-
-            console.log(data);
-
-            Swal.fire({
-                title: 'Error!',
-                text: 'Do you want to continue',
-                icon: 'suic',
-                confirmButtonText: 'Cool'
-            })
-
+Handler.POST = async(route, data) => {
+    return new Promise((resolve, reject) => {
+        axios.post(backend+route, data)
+        .then(res => {
+            resolve(res.data);
         }).catch(res => {
-            const { status, data } = res.response;
+            const { data:err } = res.response;
 
-            console.error(`ERROR AL CONSULTAR EL API (${status})`, data)
-           
-            var text = "";
-            for (var key in data) {
-                text += `<b>${key}:</b> ${data[key]}<br>`
-            }
-
+            console.error("ERROR "+err.type, err);
             
-            if(parseInt(status / 100) === 4){
-                Swal.fire({
-                    title: 'ERROR del cliente',
-                    html: text,
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar'
-                })
-            }else if(parseInt(status / 100) === 5){
-                Swal.fire({
-                    title: 'ERROR del servidor',
-                    html: text,
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar'
-                })
-            }
+            switch(err.type){
+                case "UNCOMPLETE_PARAMS": 
+                        var text = `
+                            <p><b><big> ${err.message} </big></b></p><br>
+                            <ul>
+                        `;
 
-            
-        });
+                        for(var key in err.requiredParams){
+                            if(!err.requiredParams[key]) text += `<li><b>Falta el valor:</b> ${key}</li>`
+                        }
+
+                        text += "</ul>"
+
+                        Swal.fire({
+                            icon: "warning",
+                            iconColor: COLORS.warning,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "ROUTE_NOT_CONFIGURED": 
+                        var text = `
+                            <p><b><big> ERROR: ${err.message} </big></b></p><br>
+                            <p>se hizo una peticion a la ruta <u><i>${err.route}</i></u> con el metodo <u><i>${err.method}</i></u> pero no esta configurado.</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "DEFAULT":
+                    var text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+            }   
+
+            reject(err);
+        })
+    })
+    
 }
 
 export default Handler;

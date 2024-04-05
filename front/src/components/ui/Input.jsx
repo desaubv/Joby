@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Input({label, type, variantI, variantL, extraI, extraL, placeholder}) {
+function Input({label, type, variantI, variantL, extraI, extraL, placeholder, name="", onChange, value, id, accept}) {
   const baseLabel = "w-full font-semibold"
   const baseInput = "p-2 input-base"
 
@@ -25,13 +25,13 @@ function Input({label, type, variantI, variantL, extraI, extraL, placeholder}) {
     <div>
       {variantI !== 'check' ? (
         <>
-          <label className={stylesLabel}>{label}</label>
-          <input type={type} className={stylesInput} placeholder={placeholder}/>
+          <label htmlFor={id} className={stylesLabel}>{label}</label>
+          <input id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
         </>
       ) : (
         <div className='check'>
-          <input type={type} className={stylesCheck}/>
-          <label className={stylesLabel}>{label}</label>
+          <input id={id} name={name} type={type} className={stylesCheck} onChange={onChange} value={value}/> 
+          <label htmlFor={id} className={stylesLabel}>{label}</label>
         </div>
       )}
     </div>

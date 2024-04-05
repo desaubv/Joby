@@ -8,8 +8,9 @@ import SignUp from './content/SignUp'
 import { Step1, Step2, Step3, Step4 } from './components/ui/Steps'
 
 // RUTAS
-//import LoggedRoute from './routes/LoggedRoute';
+import LoggedRoute from './routes/LoggedRoute';
 import UnloggedRoute from './routes/UnloggedRoute';
+import Logout from './content/Logout';
 
 function App() {
 
@@ -26,10 +27,11 @@ function App() {
         <Route path='/home' element={<Homepage />}/>
         <Route path='/login' element={ <UnloggedRoute> <Login /> </UnloggedRoute> } />
         <Route path='/signup' element={ <UnloggedRoute> <SignUp /> </UnloggedRoute> }/>
-        <Route path='/step1' element={<Step1 />}/>
-        <Route path='/step2' element={<Step2 />}/>
-        <Route path='/step3' element={<Step3 />}/>
-        <Route path='/step4' element={<Step4 />}/>
+        <Route path='/step1' element={ <LoggedRoute> <Step1/> </LoggedRoute> } />
+        <Route path='/step2' element={ <LoggedRoute> <Step2/> </LoggedRoute> } />
+        <Route path='/step3' element={ <LoggedRoute> <Step3/> </LoggedRoute> } />
+        <Route path='/step4' element={ <LoggedRoute> <Step4/> </LoggedRoute> } />
+        <Route path='/logout' element={ <LoggedRoute> <Logout/> </LoggedRoute> } />
       </Routes>
     </div>
   );
