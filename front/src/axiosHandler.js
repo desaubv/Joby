@@ -75,7 +75,8 @@ Handler.POST = async(route, data) => {
                         });
                 case "LOGIN":
                     var text = `
-                        <p><b><big> Correo y/o contraseña incorrectos </big></b></p><br>
+                        <p><b><big> ${err.error} </big></b></p><br>
+                        <p>${err.message}</p>
                     `;
 
                     Swal.fire({

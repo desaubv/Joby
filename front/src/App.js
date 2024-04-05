@@ -11,6 +11,7 @@ import { Step1, Step2, Step3, Step4 } from './components/ui/Steps'
 import LoggedRoute from './routes/LoggedRoute';
 import UnloggedRoute from './routes/UnloggedRoute';
 import Logout from './content/Logout';
+import Forgot from './content/Forgot';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route path='/step3' element={ <LoggedRoute> <Step3/> </LoggedRoute> } />
         <Route path='/step4' element={ <LoggedRoute> <Step4/> </LoggedRoute> } />
         <Route path='/logout' element={ <LoggedRoute> <Logout/> </LoggedRoute> } />
+        <Route path='/forgot/:state' element={ <UnloggedRoute> <Forgot/> </UnloggedRoute> } />
       </Routes>
     </div>
   );

@@ -41,7 +41,7 @@ function Login() {
         <div className='bg-white login-content p-14'>
           <div className='pb-10'>
             <h1 className='text-black uppercase text-4xl text-center pt-2 pb-3 '>Iniciar sesión</h1>
-            <Link to="/signup" className='text-sm font-semibold px-2'>¿No tienes cuenta? registrate aqui</Link>
+            <Link to="/signup" className='text-sm font-semibold px-2'>¿No tienes cuenta? <u>registrate aqui</u></Link>
           </div>
           <form onSubmit={handleSubmit} method="post" className='flex-column justify-center'>
             <div className='flex-column pb-10'>
@@ -64,11 +64,13 @@ function Login() {
                     <IconLock className='login-icon'/>
                   </div>
                 </div>
+
               </div>
               
             </div>
             <div className='flex-column items-center'>
               <Button variant="login">Iniciar sesion</Button>
+              <Link to="/forgot/1" className='text-sm font-semibold px-2'>¿Olvidaste tu contraseña? <u>Haz click aqui</u></Link>
             </div>
           </form>
         </div>

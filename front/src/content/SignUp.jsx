@@ -68,7 +68,7 @@ function SignUp() {
       </div>
       <div className='bg-white signup-content p-14'>
         <div className='pb-8'>  
-          <Link to="/login" className='text-sm'>¿Ya tienes cuenta? Inicia sesion aqui</Link>
+          <Link to="/login" className='text-sm'>¿Ya tienes cuenta? <u>Inicia sesion aqui</u></Link>
         </div>
         <form method="" className='flex flex-col justify-center' onSubmit={handleSubmit}>
           <div className='flex flex-col pb-10'>
