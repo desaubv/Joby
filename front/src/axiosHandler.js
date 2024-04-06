@@ -47,7 +47,7 @@ Handler.POST = async(route, data) => {
                         });
                     break;
                 case "ROUTE_NOT_CONFIGURED": 
-                        var text = `
+                        text = `
                             <p><b><big> ERROR: ${err.message} </big></b></p><br>
                             <p>se hizo una peticion a la ruta <u><i>${err.route}</i></u> con el metodo <u><i>${err.method}</i></u> pero no esta configurado.</p>
                         `;
@@ -61,7 +61,7 @@ Handler.POST = async(route, data) => {
                         });
                     break;
                 case "DEFAULT":
-                        var text = `
+                        text = `
                             <p><b><big> ERROR: ${err.error} </big></b></p><br>
                             <p>${err.message}</p>
                         `;
@@ -73,8 +73,9 @@ Handler.POST = async(route, data) => {
                             confirmButtonText: "Aceptar",
                             confirmButtonColor: COLORS.main
                         });
+                        break;
                 case "LOGIN":
-                    var text = `
+                    text = `
                         <p><b><big> ${err.error} </big></b></p><br>
                         <p>${err.message}</p>
                     `;
@@ -87,6 +88,19 @@ Handler.POST = async(route, data) => {
                         confirmButtonColor: COLORS.main
                     });
                     break;
+                default:
+                    text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
             }   
 
             reject(err);

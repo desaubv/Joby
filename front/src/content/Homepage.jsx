@@ -12,8 +12,8 @@ function Homepage() {
     <div className='bg-pink homepage'>
       <Header />
       {/* <SearchLayout /> */}
-      <div>
-        <div className='w-3/4 flex m-auto py-10'>
+      <div className='pt-10'>
+        <div className='w-3/4 flex m-auto py-10 '>
           <h1 className='text-4xl font-bold'>Empleos para tí</h1>
         </div>
       </div>

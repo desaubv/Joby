@@ -6,6 +6,8 @@ import LandingPage from './content/LandingPage';
 import Login from './content/Login';
 import SignUp from './content/SignUp'
 import { Step1, Step2, Step3, Step4 } from './components/ui/Steps'
+import Profile from './content/Profile';
+import Company from './content/Company'
 
 // RUTAS
 import LoggedRoute from './routes/LoggedRoute';
@@ -34,6 +36,8 @@ function App() {
         <Route path='/step4' element={ <LoggedRoute> <Step4/> </LoggedRoute> } />
         <Route path='/logout' element={ <LoggedRoute> <Logout/> </LoggedRoute> } />
         <Route path='/forgot/:state' element={ <UnloggedRoute> <Forgot/> </UnloggedRoute> } />
+        <Route path='/profile' element={ <UnloggedRoute> <Profile /> </UnloggedRoute> }/>
+        <Route path='/company'element={ <UnloggedRoute> <Company /> </UnloggedRoute> }/>
       </Routes>
     </div>
   );

@@ -34,7 +34,7 @@ function LandingPage() {
                 <img src={bg1} alt="" className='w-3/4 absolute z-0'/>
                 <img src={people1} alt="" className='w-2/5 absolute z-10'/>
             </div>
-            <div className='mt-28 flex flex-col justify-center items-center text-center px-10'>
+            <div className='mt-32 flex flex-col justify-center items-center text-center px-10'>
                 <h1 className='text-5xl font-bold'>Misión</h1>
                 <p className='font-normal text-sm mt-3'>Facilitar a los usuarios la búsqueda y aplicación de empleos mediante una plataforma intuitiva y eficiente, conectando a candidatos con oportunidades laborales que se ajusten a sus habilidades y aspiraciones profesionales.</p>
             </div>

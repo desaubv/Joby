@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { IconUserFilled, IconLock } from '@tabler/icons-react'
+import { IconUserFilled, /* IconLock */ } from '@tabler/icons-react'
 import Logo from '../assets/Logo Joby.svg' 
 import './content.css'
 /* IMPORTACION DE COMPONENTES REUTILIZABLES */

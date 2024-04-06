@@ -14,7 +14,8 @@ function Input({label, type, variantI, variantL, extraI, extraL, placeholder, na
     import: 'w-full h-auto',
     check: '',
     file: 'file',
-    date: 'date-input '
+    date: 'date-input ',
+    textarea: 'p-3'
   }
 
   const stylesLabel = `${baseLabel} ${variantStylesLabel[variantL]} ${extraL}`
@@ -23,17 +24,27 @@ function Input({label, type, variantI, variantL, extraI, extraL, placeholder, na
 
   return (
     <div>
-      {variantI !== 'check' ? (
-        <>
+      {variantI === 'textarea' ? (
+        <div>
           <label htmlFor={id} className={stylesLabel}>{label}</label>
-          <input accept={accept} id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
-        </>
+          <textarea cols="auto" id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
+        </div>
       ) : (
-        <div className='check'>
-          <input accept={accept} id={id} name={name} type={type} className={stylesCheck} onChange={onChange} value={value}/> 
-          <label htmlFor={id} className={stylesLabel}>{label}</label>
+        <div>
+          {variantI !== 'check' ? (
+            <>
+              <label htmlFor={id} className={stylesLabel}>{label}</label>
+              <input accept={accept} id={id} name={name} type={type} className={stylesInput} placeholder={placeholder} onChange={onChange} value={value} />
+            </>
+          ) : (
+            <div className='check'>
+              <input accept={accept} id={id} name={name} type={type} className={stylesCheck} onChange={onChange} value={value}/> 
+              <label htmlFor={id} className={stylesLabel}>{label}</label>
+            </div>
+          )}
         </div>
       )}
+      
     </div>
   )
 }

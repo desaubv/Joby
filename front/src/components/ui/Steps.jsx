@@ -6,7 +6,7 @@ import './ui.css'
 import React, { useRef, useState } from 'react'
 import Swal from 'sweetalert2'
 import axiosHandler from '../../axiosHandler'
-import Cropper, { ReactCropperElement } from "react-cropper";
+import Cropper /* { ReactCropperElement } */ from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
 const disabilitiesList = [
@@ -55,7 +55,7 @@ export function Step1() {
   const handleChangeCB = (e) => {
     const { name, value, type, checked } = e.target;
 
-    if(type == "checkbox"){
+    if(type === "checkbox"){
 
       if(checked){
         const disa = [...formData1.disabilities]
@@ -67,7 +67,7 @@ export function Step1() {
         setFormData1({...formData1, "disabilities": disa});
       }
 
-    }else if(type == "text"){
+    }else if(type === "text"){
 
       const disa = formData1.disabilities.filter(item => disabilitiesList.indexOf(item) > -1);
 
@@ -79,7 +79,7 @@ export function Step1() {
 
   const handleSubmit = () => {
         
-    if(formData1.gender == ""){
+    if(formData1.gender === ""){
       Swal.fire({
         icon: "warning",
         title: "Debes seleccionar cual es tu genero",
@@ -87,7 +87,7 @@ export function Step1() {
       });
       return;
 
-    }else if(document.querySelector("#Otra").checked && document.querySelector("#Other").value == ""){
+    }else if(document.querySelector("#Otra").checked && document.querySelector("#Other").value === ""){
       Swal.fire({
         icon: "warning",
         title: "Debes escribir cual es tu discapacidad",
@@ -150,9 +150,9 @@ export function Step2() {
 
   const addElement = (array) => {
     const aux = [...formData[array]];
-    if(array == "experience")
+    if(array === "experience")
       aux.push(experience);
-    else if(array == "schoolRecord")
+    else if(array === "schoolRecord")
       aux.push(schoolRecord);
 
     setFormData({...formData, [array]: aux});
@@ -333,7 +333,7 @@ export function Step3() {
     }else if(files[0].type.startsWith('image/')){
       setPicFile(files[0]);
       setUrlImage(URL.createObjectURL(files[0]))
-    }else if(files[0].type == "application/pdf"){
+    }else if(files[0].type === "application/pdf"){
       setPdfFile(files[0])
     }else{
       Toast.fire({
@@ -355,7 +355,7 @@ export function Step3() {
     }else if(files[0].type.startsWith('image/')){
       setPicFile(files[0]);
       setUrlImage(URL.createObjectURL(files[0]))
-    }else if(files[0].type == "application/pdf"){
+    }else if(files[0].type === "application/pdf"){
       setPdfFile(files[0])
     }else{
       Toast.fire({
@@ -535,7 +535,7 @@ export function Step4() {
       <p className='font-normal text-black h- text-xs flex w-full justify-end pb-2'>4/4</p>
       <div className='p-6 signup-card rounded-2xl mb-7'>
         <p className='text-black text-xl font-extrabold mb-2'>Descripción pública</p>
-        <Input onChange={(e) => setDescription(e.target.value)} variantI="base" variantL="" label="Cuéntanos acerca de ti y qué es lo que quieres que las personas vean sobre tí" type="text" extraI="h-32 flex align-text-top" extraL="text-black text-sm font-normal"/>
+        <textarea onChange={(e) => setDescription(e.target.value)} variantI="base" variantL="" label="Cuéntanos acerca de ti y qué es lo que quieres que las personas vean sobre tí" type="text" extraI="h-32 flex align-text-top" extraL="text-black text-sm font-normal"/>
       </div>
       <div className='pt-5'>
         <Link to='/step3'><Button variant="btnLink" extra='text-black back-btn'>Atrás</Button></Link>

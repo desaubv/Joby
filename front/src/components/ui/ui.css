@@ -1,5 +1,74 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 
+.App-header {
+    border: 1px solid black;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, .5);
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 225px;
+    height: 100%;
+    background-color: #222324;
+    color: #fff;
+    overflow: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    border-radius: 0px 24px 24px 0px;
+  }
+  
+.sidebar.show {
+    transform: translateX(0);
+}
+
+.side-container {
+    width: 100%;
+    height: 100%;
+}
+
+.close-sidebar {
+    width: 100%;
+    height: 10%;
+}
+
+.list {
+    width: 100%;
+    height: 90%;
+    padding-left: 10px;
+}
+
+.list li {
+    padding: 12px 0px 12px 20px;
+    margin: 20px 0px;
+}
+
+.list li.active {
+    color: #af8ce0;
+    background-color: #F2E9F2;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 5px solid #af8ce0;
+}
+
+.d-1 {
+    width: 100%;
+    height: 70%;
+}
+
+.d-2 {
+    width: 100%;
+    height: fit-content;
+}
+
+.d-3 {
+    width: 100%;
+    height: auto;
+    padding: 40px;
+}
+
 /* BOTONES*/
 .btn {
     padding: 10px 24px;
@@ -45,6 +114,13 @@
     background-color: #9C71D9;
 }
 
+.btnEdit {
+    background-color: #9C71D9;
+    padding: 10px 24px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
 .file {
     box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 1);
     border-radius: 10px;
@@ -66,8 +142,8 @@
 .footer-icon {
     border-radius: 50%;
     background-color: #af8ce0;
-    box-shadow: 
-        3.5px 1.2px #c3a9e8, 
+    box-shadow:
+        3.5px 1.2px #c3a9e8,
         -2px -2px #c3a9e8,
         1px -1px #c3a9e8,
         -3.5px 1px #c3a9e8;
@@ -76,4 +152,35 @@
 .facebook {
     fill: white;
     stroke: none;
+}
+
+/* MODAL CV */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-main {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 80%;
+    height: 80%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px;
+    overflow: auto;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
 }
