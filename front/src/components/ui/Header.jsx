@@ -20,6 +20,8 @@ function Header() {
   const [sidebar, setSidebar] = useState(false)
   const [activeItem, setActiveItem] = useState('')
 
+  const session = JSON.parse(localStorage.getItem('session'));
+
   useEffect(() => {
     const currentPath = location.pathname
 
@@ -45,7 +47,7 @@ function Header() {
         </Link>
         <div className='flex lg:gap-8 items-center'>
           <Link to="/profile">
-            <img src={idk} alt="" className="border-black border rounded-full w-14 h-14 p-1" />
+            <img src={session.pic} alt="" className="border-black border rounded-full w-14 h-14 p-1" />
           </Link>
         </div>
       </header>
@@ -76,10 +78,12 @@ function Header() {
               </li>
             </div>
             <div className='d-2'>
-              <li className='flex justify-start items-center gap-3'>
-                <IconLogout2 size={28}/>
-                <p className='text-xl font-semibold'>Cerrar sesión</p>
-              </li>
+                <Link to='/logout'>
+                  <li className='flex justify-start items-center gap-3'>
+                      <IconLogout2 size={28}/>
+                      <p className='text-xl font-semibold'>Cerrar sesión</p>
+                  </li>
+                </Link>
             </div>
             <div className='d-3 w-full'>
               <img src={logoWhite} alt="Logo Joby" />

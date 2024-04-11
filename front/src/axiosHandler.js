@@ -76,8 +76,7 @@ Handler.POST = async(route, data) => {
                         break;
                 case "LOGIN":
                     text = `
-                        <p><b><big> ${err.error} </big></b></p><br>
-                        <p>${err.message}</p>
+                        <p><b><big> ${err.message} </big></b></p><br>
                     `;
 
                     Swal.fire({

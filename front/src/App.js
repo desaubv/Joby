@@ -36,8 +36,8 @@ function App() {
         <Route path='/step4' element={ <LoggedRoute> <Step4/> </LoggedRoute> } />
         <Route path='/logout' element={ <LoggedRoute> <Logout/> </LoggedRoute> } />
         <Route path='/forgot/:state' element={ <UnloggedRoute> <Forgot/> </UnloggedRoute> } />
-        <Route path='/profile' element={ <UnloggedRoute> <Profile /> </UnloggedRoute> }/>
-        <Route path='/company'element={ <UnloggedRoute> <Company /> </UnloggedRoute> }/>
+        <Route path='/profile' element={ <LoggedRoute> <Profile /> </LoggedRoute> }/>
+        <Route path='/company'element={ <LoggedRoute> <Company /> </LoggedRoute> }/>
       </Routes>
     </div>
   );

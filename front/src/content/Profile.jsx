@@ -26,6 +26,8 @@ function Profile() {
   const [modalCv, setModalCv] = useState(false)
   const [modalEdition, setModalEdition] = useState(false)
 
+  const session = JSON.parse(localStorage.getItem('session'));
+
   useEffect(() => {
 
   }, [])
@@ -57,11 +59,11 @@ function Profile() {
         <div className="main-content mt-10 relative">
           <div className='user-info pt-16 pb-10'>
             <div className="profile-picture-container flex justify-center pb-3">
-              <img src={idk} alt="Foto de perfil" className='profile-picture'/>
+              <img src={session.pic} alt="Foto de perfil" className='profile-picture'/>
             </div>
             <div className='flex-col justify-center items-center'>
-              <h1 className='user-name py-2'>Yago Vega</h1>
-              <p className='text-sm'>batiyago.js@gmail.com</p>
+              <h1 className='user-name py-2'>{session.name} {session.lastname}</h1>
+              <p className='text-sm'>{session.email}</p>
             </div>
           </div>
           <div className='bg-white description p-5 overflow-auto'>
@@ -69,10 +71,30 @@ function Profile() {
               <IconFileCv size={45} className='p-2 bg-slate-200 rounded-full' onClick={handleOpenModalCv}/>
               <IconDots size={28} onClick={handleOpenModalEdition}/>
             </div>
-            <p className='text-md font-semibold my-3'>{/* <strong>Status:</strong> */} {data.status}</p>
-            <p className='text-sm'><strong>Descripción:</strong> {data.desc}</p>
-            <p className='text-sm'><strong>Experiencia:</strong> {data.exp}</p>
-            <p className='text-sm'><strong>Discapacidad:</strong> {data.disc}</p>
+            <p className='text-md font-semibold my-3'>{/* <strong>Status:</strong> */} {session.ocupation}</p>
+            <p className='text-sm'><strong>Descripción:</strong> {session.description}</p>
+            <p className='text-sm'><strong>Experiencia:</strong></p>
+            {
+              session.experience.map(e => 
+                <div style={{ paddingLeft: 7, marginBottom: 5, border: "1px black solid", borderLeft: 'none', borderRight: 'none' }}>
+                  <ul>
+
+                    <li> <p className='text-xs'><b>Empresa:</b> {e.name}</p> </li>
+                    <li> <p className='text-xs'><b>Puesto:</b> {e.position}</p> </li>
+                    <li> <p className='text-xs'><b>Fecha de Inicio:</b> {e.start}</p> </li>
+                    <li> <p className='text-xs'><b>Fecha de Fin:</b> {e.end}</p> </li>
+                    <li> <p className='text-xs'><b>Habilidades:</b> {e.habilities}</p> </li>
+
+                  </ul>
+                </div>
+              )
+            }
+            <p className='text-sm'><strong>Discapacidad(es):</strong></p>
+            <ul>
+              {
+                session.disabilities.map(d => <li> <p className='text-sm'>- {d}</p></li>)
+              }
+            </ul>
           </div>
           <div className='btns flex flex-col justify-center items-center'>
             <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconUserCog />Editar Perfil</Button>
