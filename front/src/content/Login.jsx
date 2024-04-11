@@ -24,7 +24,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axiosHandler.POST('login/', formData)
+    axiosHandler.PUT('login/', formData)
       .then(data => {
         localStorage.setItem('session', JSON.stringify(data))
         window.location.href = "/home"

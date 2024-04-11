@@ -48,7 +48,7 @@ Handler.POST = async(route, data) => {
                     break;
                 case "ROUTE_NOT_CONFIGURED": 
                         text = `
-                            <p><b><big> ERROR: ${err.message} </big></b></p><br>
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
                             <p>se hizo una peticion a la ruta <u><i>${err.route}</i></u> con el metodo <u><i>${err.method}</i></u> pero no esta configurado.</p>
                         `;
 
@@ -103,9 +103,89 @@ Handler.POST = async(route, data) => {
             }   
 
             reject(err);
-        })
-    })
-    
+        });
+    });
 }
+
+
+Handler.PUT = async(route, data) => {
+    return new Promise((resolve, reject) => {
+        axios.put(backend+route, data)
+        .then(res => {
+            resolve(res.data);
+        }).catch(res => {
+            const { data:err } = res.response;
+
+            console.error("ERROR "+err.type, err);
+            
+            switch(err.type){
+                case "UNCOMPLETE_PARAMS": 
+                        var text = `
+                            <p><b><big> ${err.type} </big></b></p><br>
+                            <ul>
+                        `;
+
+                        for(var key in err.requiredParams){
+                            if(!err.requiredParams[key]) text += `<li><b>Falta el valor:</b> ${key}</li>`
+                        }
+
+                        text += "</ul>"
+
+                        Swal.fire({
+                            icon: "warning",
+                            iconColor: COLORS.warning,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "ROUTE_NOT_CONFIGURED": 
+                        text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>se hizo una peticion a la ruta <u><i>${err.route}</i></u> con el metodo <u><i>${err.method}</i></u> pero no esta configurado.</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "DEFAULT":
+                        text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                        break;
+                default:
+                    text = `
+                            <p><b><big> ERROR: ${err.type} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+            }   
+
+            reject(err);
+        });
+    });
+}
+
 
 export default Handler;

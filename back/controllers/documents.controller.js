@@ -55,10 +55,9 @@ function Documents(io){
         DocumentHandler.findById(id)
             .then(data => {
 
-                console.log(data);
-
-                res.setHeader('Content-Disposition', `attachment; filename="${data.title}"`);
                 res.setHeader('Content-Type', data.type);
+                res.setHeader('Content-Disposition', `inline; filename="${data.title}"`);
+                
                 res.send(data.file);
 
             }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));

@@ -11,8 +11,11 @@ import {
   IconFileCv, 
   IconDots 
 } from '@tabler/icons-react'
-import idk from '../assets/idk.jpg'
 import './content.css'
+
+
+import { Document, Page } from '@react-pdf/renderer';
+
 
 function Profile() {
 
@@ -96,10 +99,14 @@ function Profile() {
               }
             </ul>
           </div>
+
+          <Document file="../assets/pdfExample.pdf">
+            <Page pageNumber={1} width={600} />
+          </Document>
+
+
           <div className='btns flex flex-col justify-center items-center'>
-            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconUserCog />Editar Perfil</Button>
-            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconSettings />Ajustes</Button>
-            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconUsers />Cuentas</Button>
+            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold" onClick={handleOpenModalEdition}><IconUserCog />Editar Perfil</Button>
             <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconBuilding />+ Añadir empresa</Button>
           </div>
         </div>
