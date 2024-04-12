@@ -12,10 +12,7 @@ import {
   IconDots 
 } from '@tabler/icons-react'
 import './content.css'
-
-
-import { Document, Page } from '@react-pdf/renderer';
-
+import axiosHandler from '../axiosHandler';
 
 function Profile() {
 
@@ -26,8 +23,8 @@ function Profile() {
     'disc': 'autismo'
   }
 
-  const [modalCv, setModalCv] = useState(false)
-  const [modalEdition, setModalEdition] = useState(false)
+  const [ modalEdition, setModalEdition ] = useState(false)
+  const [ documents, setDocuments ] = useState(null);
 
   const session = JSON.parse(localStorage.getItem('session'));
 
@@ -36,11 +33,8 @@ function Profile() {
   }, [])
 
   const handleOpenModalCv = () => {
-    setModalCv(true);
-  };
-
-  const handleCloseModalCv = () => {
-    setModalCv(false);
+    console.log(documents);
+    if(documents !== null) window.open(axiosHandler.backend+'documents/'+documents._id);
   };
 
   const handleOpenModalEdition = () => {
@@ -50,6 +44,18 @@ function Profile() {
   const handleCloseModalEdition = () => {
     setModalEdition(false);
   };
+
+  useEffect(() => {
+      const getData = async() => {
+          axiosHandler.GET('documents/user/'+session._id)
+          .then(data => {
+              setDocuments(data[0]);
+          })
+          .catch({})
+      }
+
+      getData();
+  }, [ 1 ]);
 
   return (
     <div className="content">
@@ -71,7 +77,9 @@ function Profile() {
           </div>
           <div className='bg-white description p-5 overflow-auto'>
             <div className='w-full flex justify-between items-center'>
-              <IconFileCv size={45} className='p-2 bg-slate-200 rounded-full' onClick={handleOpenModalCv}/>
+              {
+                documents == null ? <button></button> :  <IconFileCv size={45} className='p-2 bg-slate-200 rounded-full' onClick={handleOpenModalCv}/>
+              }
               <IconDots size={28} onClick={handleOpenModalEdition}/>
             </div>
             <p className='text-md font-semibold my-3'>{/* <strong>Status:</strong> */} {session.ocupation}</p>
@@ -79,7 +87,7 @@ function Profile() {
             <p className='text-sm'><strong>Experiencia:</strong></p>
             {
               session.experience.map(e => 
-                <div style={{ paddingLeft: 7, marginBottom: 5, border: "1px black solid", borderLeft: 'none', borderRight: 'none' }}>
+                <div key={e.puesto+e.name} style={{ paddingLeft: 7, marginBottom: 5, border: "1px black solid", borderLeft: 'none', borderRight: 'none' }}>
                   <ul>
 
                     <li> <p className='text-xs'><b>Empresa:</b> {e.name}</p> </li>
@@ -95,24 +103,17 @@ function Profile() {
             <p className='text-sm'><strong>Discapacidad(es):</strong></p>
             <ul>
               {
-                session.disabilities.map(d => <li> <p className='text-sm'>- {d}</p></li>)
+                session.disabilities.map(d => <li key={d}> <p className='text-sm'>- {d}</p></li>)
               }
             </ul>
           </div>
-
-          <Document file="../assets/pdfExample.pdf">
-            <Page pageNumber={1} width={600} />
-          </Document>
-
 
           <div className='btns flex flex-col justify-center items-center'>
             <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold" onClick={handleOpenModalEdition}><IconUserCog />Editar Perfil</Button>
             <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconBuilding />+ Añadir empresa</Button>
           </div>
         </div>
-        <div className='fixed z-50'>
-          <CvModal show={modalCv} handleClose={handleCloseModalCv}/>
-        </div>
+
         <div className='fixed z-50'>
           <EditDescModal data={data} show={modalEdition} handleClose={handleCloseModalEdition} />
         </div>

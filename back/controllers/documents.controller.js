@@ -82,6 +82,16 @@ function Documents(io){
 
     }
 
+    controller.getDocumentsByUser = async(req, res) => {
+        const { id } = req.params;
+
+        const DocumentHandler = new MongooseHandler(DocumentsModel);
+        DocumentHandler.find({ userId: id })
+            .then(data =>   HTTPHandler.okResponse(res, data))
+            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
+        
+    }
+
     return controller;
 }
 

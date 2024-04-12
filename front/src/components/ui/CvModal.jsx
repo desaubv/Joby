@@ -1,8 +1,26 @@
-import { Page, Document } from '@react-pdf/renderer';
 import { IconX } from '@tabler/icons-react'
 import './ui.css'
+import { useEffect, useState } from 'react';
+import axiosHandler from '../../axiosHandler';
+import { Link } from 'react-router-dom';
 
 const CvModal = ({ handleClose, show}) => {
+
+    const session = JSON.parse( localStorage.getItem('session') );
+    const [ documents, setDocuments ] = useState([]);
+
+    useEffect(() => {
+        const getData = async() => {
+            axiosHandler.GET('documents/user/'+session._id)
+            .then(data => {
+                console.log(data);
+                setDocuments(data);
+            })
+            .catch({})
+        }
+
+        getData();
+    }, [ session ]);
 
     const showHideClassName = show ? 'modal display-block' : 'modal display-none';
 
@@ -13,13 +31,15 @@ const CvModal = ({ handleClose, show}) => {
                 <IconX onClick={handleClose} />
             </div>
             <div>
-                <div className="pdf-modal">
-                    <div className="pdf-modal-content">
-                        <Document file="../../assets/pdfExample.pdf">
-                            <Page pageNumber={2} />
-                        </Document>
-                    </div>
-                </div>
+                <p className='text-black text-xl font-extrabold'>Documentos</p>
+                {
+                    documents.length == 0
+                    ? <>NOOOOOOOOOOO</>
+                    : documents.map((d, index) => {
+                        <p>a</p>
+                    })
+                }
+            <button onClick={() => console.log( documents ) }>Hola</button>
             </div>
         </section>
       </div>
