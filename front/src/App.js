@@ -14,6 +14,7 @@ import LoggedRoute from './routes/LoggedRoute';
 import UnloggedRoute from './routes/UnloggedRoute';
 import Logout from './content/Logout';
 import Forgot from './content/Forgot';
+import AddCompany from './content/AddCompany';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         <Route path='/forgot/:state' element={ <UnloggedRoute> <Forgot/> </UnloggedRoute> } />
         <Route path='/profile' element={ <LoggedRoute> <Profile /> </LoggedRoute> }/>
         <Route path='/company'element={ <LoggedRoute> <Company /> </LoggedRoute> }/>
+        <Route path='/addcompany'element={ <LoggedRoute> <AddCompany /> </LoggedRoute> }/>
       </Routes>
     </div>
   );

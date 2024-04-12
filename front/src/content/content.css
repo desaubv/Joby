@@ -29,6 +29,11 @@
     border: 1px solid #000;
 }
 
+.text-area{
+    border-radius: 10px;
+    border: 1px solida #000;
+}
+
 .signup {
     font-family: 'Inter Tight';
     font-weight: 900;
@@ -130,7 +135,8 @@
 .btns Button {
     background-color: #b796e1;
     color: white;
-}
+} 
+
 
 @media (min-width: 950px) {
     .container {
