@@ -13,6 +13,9 @@ function Documents(io){
     router.route('/:id/data')
         .get( controller.getDocumentData )
 
+    router.route('/user/:id')
+        .get( controller.getDocumentsByUser )
+
 
     return router;
 }
