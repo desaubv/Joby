@@ -27,6 +27,20 @@
     border-radius: 20px;
     box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 1);
     border: 1px solid #000;
+} 
+
+.contact-button {
+    width: 120px;
+    text-align: center;
+    background-color:#8c65c0;
+    border-radius: 0px 90px 0px 0px;    
+}
+
+.jobs-button {
+    width: 120px;
+    text-align: center;
+    background-color: #6B98F2;
+    border-radius: 10px 10px 0px 0px;    
 }
 
 .text-area{
@@ -42,6 +56,20 @@
 
 .bg-pink {
     background-color: #F2E9F2;
+}
+
+.bg-purple {
+    background-color:#9C71D9B0;
+    width: 350px;
+    height: auto;
+    border-radius: 24px;
+}
+
+.bg-purple2 {
+    background-color:#9C71D9B0;
+    width: 350px;
+    height: auto;
+    border-radius: 0px 0px 24px 24px;
 }
 
 .homepage {
@@ -98,6 +126,16 @@
     z-index: 2;
     top: -40%;
     left: 50%;
+    transform: translateX(-50%);
+}
+
+.company-picture {
+    width: 90px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+    top: 20%;
+    left: 20%;
     transform: translateX(-50%);
 }
 

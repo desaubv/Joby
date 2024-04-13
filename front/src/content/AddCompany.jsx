@@ -176,16 +176,15 @@ function AddCompany() {
         <div className='content bg-pink'>
           <Header />
           <div className='w-full pt-20 pb-8 text-center flex items-center justify-center'>
-            <h1 className='text-1xl font-bold mr-1'>Coloca tus detalles personales</h1>
+            <h1 className='text-1xl font-bold mr-1'>Coloca los datos de tu empresa</h1>
             <IconUsers className='h-6 w-6 mr-2  '/>         
           </div>  
           <div className='ml-2 mb-2'>
-            <p className='text-lg font-bold'>Nombre completo:</p>
+            <p className='text-lg font-bold'>Nombre de la empresa:</p>
           </div>
-          <div className='ml-1'>
-            <input type='text' placeholder = 'Nombres' className='w-40 text-black font-normal text-left border border-black p-2 mr-3 mb-3 login-input'></input>
-            <input type='text' placeholder = 'Apellidos' className='w-40 text-black font-normal text-left border border-black  p-2 mr-3 mb-3 login-input'></input>
-          </div>
+          <div className='flex justify-center'>
+            <input type='text' placeholder = 'Nombre' className='w-80 text-black font-normal text-left border border-black p-2 mr-3 mb-3 login-input'></input>            
+          </div>   
           <p className='text-black text-lg font-bold ml-2 mb-2 mt-4'>Logotipo de la empresa</p>
           <div className='dnd text-center w-3/4 m-auto mb-4' style={{ cursor: 'pointer' }} onClick={(e) => selectFile("input-file-pic")} >
                           
