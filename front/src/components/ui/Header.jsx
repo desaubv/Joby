@@ -12,7 +12,6 @@ import {
 import { Link, useLocation } from 'react-router-dom'
 import logo from '../../assets/Logo Joby Black.svg'
 import logoWhite from '../../assets/Logo Joby.svg'
-import idk from '../../assets/idk.jpg'
 import './ui.css'
 
 function Header() {
@@ -27,8 +26,8 @@ function Header() {
 
     if (currentPath === '/home') {
       setActiveItem('home')
-    } else if (currentPath === '/chat') {
-      setActiveItem('chat');
+    } else if (currentPath === '/chats') {
+      setActiveItem('chats');
     } else if (currentPath === '/profile') {
       setActiveItem('profile')
     } else {
