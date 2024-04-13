@@ -16,6 +16,7 @@ import Logout from './content/Logout';
 import Forgot from './content/Forgot';
 import Chats from './content/Chats';
 import Chat from './content/Chat';
+import AddCompany from './content/AddCompany';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
         <Route path='/chats'element={ <LoggedRoute> <Chats /> </LoggedRoute> }/>
         <Route path='/chat/:id'element={ <LoggedRoute> <Chat /> </LoggedRoute> }/>
 
+        <Route path='/addcompany'element={ <LoggedRoute> <AddCompany /> </LoggedRoute> }/>
       </Routes>
     </div>
   );
