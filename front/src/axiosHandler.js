@@ -3,7 +3,7 @@ import 'sweetalert2/src/sweetalert2.scss'
 import axios from 'axios'
 
 const Handler = {}
-const backend = 'http://localhost:8080/api/';
+const backend = 'http://192.168.100.86:8080/api/';
 
 const COLORS = {
     warning: "#F7D900",

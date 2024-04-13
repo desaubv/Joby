@@ -4,9 +4,7 @@ import Button from '../components/ui/Button'
 import CvModal from '../components/ui/CvModal'
 import EditDescModal from '../components/ui/EditDescModal'
 import { 
-  IconUserCog, 
-  IconSettings, 
-  IconUsers, 
+  IconUserCog,
   IconBuilding, 
   IconFileCv, 
   IconDots 

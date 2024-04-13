@@ -6,13 +6,14 @@ class MongooseHandler{
         this.Model = Model;
     }
 
-    async find(filter = {}) {
+    async find(filter = {}, sort={}) {
         return new Promise(async(resolve, reject) => {
             const dbStatus = await this.#comprobateConnection();
 
             if (dbStatus.connected) {
                 
                 this.Model.find(filter)
+                    .sort(sort)
                     .then((data) => resolve(data))
                     .catch(err => reject({
                             error: err,
