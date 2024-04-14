@@ -38,8 +38,21 @@ class Sockets {
 
             socket.on('client:getMessages', async(conversationId) => {
                 const messages = await MessageModel.find({conversationId: conversationId}).sort({ conversationId: 1 });
+                const labels = [];
 
-                io.to(conversationId).emit("server:showMessages", messages);
+                const response = messages.map(m => {
+                    const label = determinarFecha(m.date);
+                    if( !labels.includes(label) ){
+                        labels.push(label);
+                        const tmp = m.toObject();
+                        tmp.label = label;
+
+                        return tmp;
+                    }
+                    return m;
+                });
+
+                io.to(conversationId).emit("server:showMessages", response);
             })
 
         });
@@ -48,3 +61,26 @@ class Sockets {
 }
 
 module.exports = Sockets;
+
+function determinarFecha(fechaString) {
+    const partesFecha = fechaString.split('-');
+    const dia = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10) - 1;
+    const anio = parseInt(partesFecha[2], 10);
+    const fecha = new Date(anio, mes, dia);
+
+    const fechaActual = new Date();
+    fechaActual.setHours(0, 0, 0, 0); 
+
+    const diferencia = (fechaActual - fecha) / (1000 * 60 * 60 * 24);
+
+    if (diferencia === 0) {
+        return 'Hoy';
+    } else if (diferencia === 1) {
+        return 'Ayer';
+    } else if (diferencia === 2) {
+        return 'Anteayer';
+    } else {
+        return fechaString;
+    }
+}

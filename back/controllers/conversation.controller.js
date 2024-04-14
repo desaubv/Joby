@@ -31,7 +31,7 @@ const oportunityController = (io) => {
                     datita.pic = user.pic;
                     datita.name = user.name;
                     datita.lastname = user.lastname;
-                    datita.lastMessage = lastMessage.message;
+                    datita.lastMessage = lastMessage.sender == c.userId1 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
                     datita.time = lastMessage.time;
                     datita.date = lastMessage.date;
                     
@@ -40,12 +40,11 @@ const oportunityController = (io) => {
                     const user = await UsersModel.findById(c.userId2);
                     const lastMessage = await MessageModel.findOne({conversationId: c._id, conversationIndex: c.conversationIndex});
 
-
                     datita._id = c._id;
                     datita.pic = user.pic;
                     datita.name = user.name;
                     datita.lastname = user.lastname;
-                    datita.lastMessage = lastMessage !== null ? lastMessage.message : '';
+                    datita.lastMessage = lastMessage.sender == c.userId2 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
                     datita.time = lastMessage !== null ? lastMessage.time : '';
                     datita.date = lastMessage !== null ? lastMessage.date : '';
                     datita.readen = lastMessage !== null ? lastMessage.readen : false;
@@ -82,7 +81,24 @@ const oportunityController = (io) => {
                     other['lastname'] = otherUser.lastname;
 
                     MessagesHandler.find({ conversationId: conversationId }, { conversationId: 1 })
-                        .then(messages => HTTPHandler.okResponse(res, { other, messages }) )
+                        .then(messages => {
+                            const labels = [];
+
+                            const response = messages.map(m => {
+                                const label = determinarFecha(m.date, m.time);
+                                if( !labels.includes(label) ){
+                                    labels.push(label);
+                                    const tmp = m.toObject();
+                                    tmp.label = label;
+
+                                    return tmp;
+                                }
+
+                                return m;
+                            })
+
+                            HTTPHandler.okResponse(res, { other, messages: response }) 
+                        })
                         .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
                 }).catch(err =>{ HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }); console.log("VALIO VERGA", err); } );
@@ -94,3 +110,26 @@ const oportunityController = (io) => {
 }
 
 module.exports = oportunityController;
+
+function determinarFecha(fechaString, time) {
+    const partesFecha = fechaString.split('-');
+    const dia = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10) - 1;
+    const anio = parseInt(partesFecha[2], 10);
+    const fecha = new Date(anio, mes, dia);
+
+    const fechaActual = new Date();
+    fechaActual.setHours(0, 0, 0, 0); 
+
+    const diferencia = (fechaActual - fecha) / (1000 * 60 * 60 * 24);
+
+    if (diferencia === 0) {
+        return 'Hoy';
+    } else if (diferencia === 1) {
+        return 'Ayer';
+    } else if (diferencia === 2) {
+        return 'Anteayer';
+    } else {
+        return fechaString;
+    }
+}

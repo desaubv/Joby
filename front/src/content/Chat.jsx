@@ -91,7 +91,17 @@ const Chat = () => {
                             <LoaderDefault/>
                             <p style={{ width: '100%', textAlign:'center' }} className='text-xl'>Cargando mensajes...</p>
                           </div>
-                        : messages.map((m, index) => <Message key={'msg-'+index} mine={session._id === m.sender} body={m.message} time={m.time}/> )
+                        : messages.map((m, index) => 
+                                m.label !== undefined
+                                ? <>
+                                    <div style={{ width: '100%', backgroundColor: '#F0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'ceter', marginTop: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+                                        <p className='text-black font-bold text-sm'>{m.label}</p>                                
+                                    </div>
+                                    
+                                    <Message key={'msg-'+index} mine={session._id === m.sender} body={m.message} time={m.time}/> 
+                                </>
+                                : <Message key={'msg-'+index} mine={session._id === m.sender} body={m.message} time={m.time}/> 
+                          )
                             
                     }
                     <br/>
@@ -111,4 +121,7 @@ const Chat = () => {
     )
 }
 
-export default Chat
+export default Chat;
+
+
+

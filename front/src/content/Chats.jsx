@@ -4,17 +4,28 @@ import ChatItem from '../components/ui/ChatItem'
 import axiosHandler from '../axiosHandler';
 import '../content/Chat.css';
 import LoaderDefault from '../components/ui/LoaderDefault';
+import { socket } from '../socket';
 
 const Chats = () => {
 
     const session = JSON.parse( localStorage.getItem('session') );
     const [ conversations, setConversations ] = useState(null);
+    const [ labels, setLabels ] = useState([]);
 
     useEffect(() => {
+
+        socket.emit('client:joinConversations', session._id);
+
         axiosHandler.GET('conversations/user/'+session._id)
         .then(data => setConversations(data))
+        .catch({});
+    }, [1]);
+
+    socket.on('server:sendedMessage', () => axiosHandler.GET('conversations/user/'+session._id)
+        .then(data => setConversations(data))
         .catch({})
-    }, [1])
+    );
+
 
   return (
         <div style={{ width: '100%', height: '100vh', backgroundColor: '#9C71D952' }}>
@@ -40,7 +51,7 @@ const Chats = () => {
                                 img={c.pic}
                                 name={c.name+' '+c.lastname}
                                 message={c.lastMessage}
-                                time={c.time}
+                                time={determinarFecha(c.date, c.time)}
                                 readen={c.readen}
                             />
                         )
@@ -54,4 +65,27 @@ const Chats = () => {
     )
 }
 
-export default Chats
+export default Chats;
+
+function determinarFecha(fechaString, time) {
+    const partesFecha = fechaString.split('-');
+    const dia = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10) - 1;
+    const anio = parseInt(partesFecha[2], 10);
+    const fecha = new Date(anio, mes, dia);
+
+    const fechaActual = new Date();
+    fechaActual.setHours(0, 0, 0, 0); 
+
+    const diferencia = (fechaActual - fecha) / (1000 * 60 * 60 * 24);
+
+    if (diferencia === 0) {
+        return time;
+    } else if (diferencia === 1) {
+        return 'Ayer';
+    } else if (diferencia === 2) {
+        return 'Anteayer';
+    } else {
+        return fechaString;
+    }
+}
