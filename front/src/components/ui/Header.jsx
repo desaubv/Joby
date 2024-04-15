@@ -7,6 +7,7 @@ import {
   IconMessages,
   IconLogout2,
   IconUser,
+  IconList,
   /* IconAddressBook, IconBell, IconMessage */ 
 } from '@tabler/icons-react'
 import { Link, useLocation } from 'react-router-dom'
@@ -30,7 +31,9 @@ function Header() {
       setActiveItem('chats');
     } else if (currentPath === '/profile') {
       setActiveItem('profile')
-    } else {
+    } else if (currentPath === '/myoportinities') {
+      setActiveItem('myoportinities')
+    }else {
       setActiveItem('');
     }
   }, [location.pathname])
@@ -73,6 +76,12 @@ function Header() {
                 <Link to="/profile" className='flex justify-start items-center gap-3'>
                   <IconUser size={28}/>
                   <p className='text-xl font-semibold'>Perfil</p>
+                </Link>
+              </li>
+              <li className={`w-full ${activeItem === 'myoportinities' ? 'active' : ''}`}>
+                <Link to="/myoportunities" className='flex justify-start items-center gap-3'>
+                  <IconList size={28}/>
+                  <p className='text-xl font-semibold'>Mis vacantes</p>
                 </Link>
               </li>
             </div>

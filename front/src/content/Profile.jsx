@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import Header from '../components/ui/Header'
 import Button from '../components/ui/Button'
-import CvModal from '../components/ui/CvModal'
 import EditDescModal from '../components/ui/EditDescModal'
 import { 
   IconUserCog,
@@ -11,6 +10,7 @@ import {
 } from '@tabler/icons-react'
 import './content.css'
 import axiosHandler from '../axiosHandler';
+import { Link } from 'react-router-dom'
 
 function Profile() {
 
@@ -23,6 +23,7 @@ function Profile() {
 
   const [ modalEdition, setModalEdition ] = useState(false)
   const [ documents, setDocuments ] = useState(null);
+  const [ enterprise, setEnterprise ] = useState(null);
 
   const session = JSON.parse(localStorage.getItem('session'));
 
@@ -48,8 +49,14 @@ function Profile() {
           axiosHandler.GET('documents/user/'+session._id)
           .then(data => {
               setDocuments(data[0]);
-          })
-          .catch({})
+          }).catch({})
+
+          if(session.enterpriseId !== undefined){
+            axiosHandler.GET('enterprise/'+session.enterpriseId)
+            .then(data => {
+              setEnterprise(data);
+            }).catch({})
+          }
       }
 
       getData();
@@ -71,6 +78,9 @@ function Profile() {
             <div className='flex-col justify-center items-center'>
               <h1 className='user-name py-2'>{session.name} {session.lastname}</h1>
               <p className='text-sm'>{session.email}</p>
+              {
+                enterprise == null ? <></> : <Link to={'/company/'+enterprise._id}>Trabajo en: <b style={{ textDecoration: 'underline' }}>{enterprise.name}</b></Link>
+              }
             </div>
           </div>
           <div className='bg-white description p-5 overflow-auto'>
@@ -80,7 +90,7 @@ function Profile() {
               }
               <IconDots size={28} onClick={handleOpenModalEdition}/>
             </div>
-            <p className='text-md font-semibold my-3'>{/* <strong>Status:</strong> */} {session.ocupation}</p>
+            <p className='text-md font-semibold my-3'>{session.ocupation}</p>
             <p className='text-sm'><strong>Descripción:</strong> {session.description}</p>
             <p className='text-sm'><strong>Experiencia:</strong></p>
             {
@@ -108,7 +118,8 @@ function Profile() {
 
           <div className='btns flex flex-col justify-center items-center'>
             <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold" onClick={handleOpenModalEdition}><IconUserCog />Editar Perfil</Button>
-            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold"><IconBuilding />+ Añadir empresa</Button>
+            <Button variant="btnM" extra="flex justify-center items-center gap-3 font-semibold" onClick={() => window.location.href = '/joincompany'}><IconBuilding />Trabajo en empresa</Button>
+            <div style={{ minHeight: session.enterpriseId == undefined ? '340px' : '400px', content: '' }}></div>
           </div>
         </div>
 

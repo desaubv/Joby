@@ -17,6 +17,10 @@ import Forgot from './content/Forgot';
 import Chats from './content/Chats';
 import Chat from './content/Chat';
 import AddCompany from './content/AddCompany';
+import JoinCompany from './content/JoinCompany';
+import Oportunity from './content/Oportunity';
+import MyOportunities from './content/MyOportunities';
+import AllApplies from './content/AllApplies';
 
 function App() {
 
@@ -40,11 +44,16 @@ function App() {
         <Route path='/logout' element={ <LoggedRoute> <Logout/> </LoggedRoute> } />
         <Route path='/forgot/:state' element={ <UnloggedRoute> <Forgot/> </UnloggedRoute> } />
         <Route path='/profile' element={ <LoggedRoute> <Profile /> </LoggedRoute> }/>
-        <Route path='/company'element={ <LoggedRoute> <Company /> </LoggedRoute> }/>
+        <Route path='/company/:id'element={ <LoggedRoute> <Company /> </LoggedRoute> }/>
         <Route path='/chats'element={ <LoggedRoute> <Chats /> </LoggedRoute> }/>
         <Route path='/chat/:id'element={ <LoggedRoute> <Chat /> </LoggedRoute> }/>
-
         <Route path='/addcompany'element={ <LoggedRoute> <AddCompany /> </LoggedRoute> }/>
+        <Route path='/joincompany'element={ <LoggedRoute> <JoinCompany /> </LoggedRoute> }/>
+        <Route path='/oportunity/:id'element={ <LoggedRoute> <Oportunity /> </LoggedRoute> }/>
+        <Route path='/myoportunities'element={ <LoggedRoute> <MyOportunities /> </LoggedRoute> }/>
+        <Route path='/applies/:id'element={ <LoggedRoute> <AllApplies /> </LoggedRoute> }/>
+
+
       </Routes>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react'
 import './ui.css'
 
-const Button = ({children, variant, onClick, extra}) => {
+const Button = ({children, variant, onClick, extra, style}) => {
 
     const base = 'btn'
     const variantStyles = {
@@ -15,11 +15,11 @@ const Button = ({children, variant, onClick, extra}) => {
         login: 'uppercase w-full text-white login-btn bg-violet-400',
     }
 
-    const style = `${base} ${variantStyles[variant]} ${extra}`
+    const classNm = `${base} ${variantStyles[variant]} ${extra}`
 
   return (
     <div>
-      <button className={style} onClick={onClick}>
+      <button style={style} className={classNm} onClick={onClick}>
         {children}
       </button>
     </div>

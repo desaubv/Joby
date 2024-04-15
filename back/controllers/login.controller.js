@@ -257,11 +257,10 @@ async function signinState4(req, res, userId){
 
         }else if(pic !== undefined && cv === undefined){
 
-            CloudinaryHandler.uploadFile(pic.tempFilePath)
+            CloudinaryHandler.uploadFile(pic.tempFilePath, 'user')
             .then(url => {
                 userHandler.findByIdAndUpdate(userId, { pic: url })
                 .then(user => {
-                    console.log(2);
                     HTTPHandler.okResponse(res, user);
                     FilesHandler.deleteAllFilesFromArray([pic], 'tempFilePath');
                 })
@@ -288,18 +287,17 @@ async function signinState4(req, res, userId){
                 file: fs.readFileSync(cv.tempFilePath)  
             }).then(doc => {
                 
-                CloudinaryHandler.uploadFile(pic.tempFilePath)
+                CloudinaryHandler.uploadFile(pic.tempFilePath, 'user')
                 .then(url => {
 
                     userHandler.findByIdAndUpdate(userId, { pic: url })
-                    .then(user => {
-                        HTTPHandler.okResponse(res, user);
-                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
-                    })
-                    .catch(err => {
-                        HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
-                        FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
-                    });
+                        .then(user => {
+                            HTTPHandler.okResponse(res, user);
+                            FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                        }).catch(err => {
+                            HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE });
+                            FilesHandler.deleteAllFilesFromArray([pic, cv], 'tempFilePath');
+                        });
                     
                 }).catch(err => {
                     HTTPHandler.serverError(res, { error: err, message: 'Error al subir la foto', type: "CLOUDINARY" });

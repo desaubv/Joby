@@ -10,16 +10,15 @@ import Cropper /* { ReactCropperElement } */ from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
 const disabilitiesList = [
-  "Discapacidad visual",
-  "Discapacidad auditiva",
-  "Discapacidad motriz",
-  "Discapacidad intelectual",
-  "Trastorno del espectro autista (TEA)",
-  "Síndrome de Down",
-  "Parálisis cerebral",
-  "Discapacidad del habla",
-  "Discapacidad del aprendizaje",
-  "Discapacidad emocional"
+  "Auditiva (Parcial)",
+  "Auditiva (Total)",
+  "Intelectual",
+  "Motiz (Silla de ruedas)",
+  "Motiz (Brazos o torso)",
+  "Motiz (Cadera, piernas o pies)",
+  "Motiz (Talla baja)",
+  "Visual (Parcial)",
+  "Visual (Total)",
 ];
 
 const experience = {
@@ -535,11 +534,11 @@ export function Step4() {
       <p className='font-normal text-black h- text-xs flex w-full justify-end pb-2'>4/4</p>
       <div className='p-6 signup-card rounded-2xl mb-7'>
         <p className='text-black text-xl font-extrabold mb-2'>Descripción pública</p>
-        <textarea onChange={(e) => setDescription(e.target.value)} variantI="base" variantL="" label="Cuéntanos acerca de ti y qué es lo que quieres que las personas vean sobre tí" type="text" extraI="h-32 flex align-text-top" extraL="text-black text-sm font-normal"/>
+        <Input onChange={(e) => setDescription(e.target.value)}  placeholder="Cuéntanos acerca de ti y qué es lo que quieres que las personas vean sobre ti..." variantI="textarea" label="Cuéntanos acerca de ti y qué es lo que quieres que las personas vean sobre tí:" extraI="w-full h-24"/>
       </div>
       <div className='pt-5'>
-        <Link to='/step3'><Button variant="btnLink" extra='text-black back-btn'>Atrás</Button></Link>
         <Button variant="btnLink" extra="text-white sig-btn" onClick={handleSubmit}>Finalizar</Button>
+        <Link to='/step3'><Button variant="btnLink" extra='text-black back-btn'>Atrás</Button></Link>
       </div>
     </div>
   )

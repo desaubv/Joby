@@ -16,7 +16,7 @@ class MongooseHandler{
                     .sort(sort)
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -40,7 +40,7 @@ class MongooseHandler{
                 this.Model.findById(id)
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -66,7 +66,33 @@ class MongooseHandler{
                         resolve( await this.Model.findById(id) )
                     })
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
+                            message: err.message
+                        })
+                    )
+                
+            }else{
+                reject({
+                    error: '[BASE DE DATOS NO CONECTADA]',
+                    message: 'La base de datos esta desconectada'
+                });
+            }
+
+        });
+    }
+
+    async findByIdAndDelete(id) {
+        return new Promise(async(resolve, reject) => {
+            const dbStatus = await this.#comprobateConnection();
+
+            if (dbStatus.connected) {
+                
+                this.Model.findByIdAndDelete(id)
+                    .then(async() => {
+                        resolve( await this.Model.findById(id) )
+                    })
+                    .catch(err => reject({
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -90,7 +116,7 @@ class MongooseHandler{
                 this.Model.findOne(filter)
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -114,7 +140,7 @@ class MongooseHandler{
                 this.Model.findOneAndDelete(filter)
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -138,7 +164,7 @@ class MongooseHandler{
                 this.Model.findOneAndUpdate(filter, object)
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )
@@ -162,7 +188,7 @@ class MongooseHandler{
                 new this.Model(object).save()
                     .then((data) => resolve(data))
                     .catch(err => reject({
-                            error: err,
+                            error: err.toObject(),
                             message: err.message
                         })
                     )

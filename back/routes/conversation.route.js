@@ -4,6 +4,10 @@ const router = Router();
 function Documents(io){
     const controller = require('../controllers/conversation.controller')(io);
     
+    
+    router.route('/')
+        .post( controller.createConversation )
+    
     router.route('/user/:id')
         .get(controller.getConversations)
     

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/ui/Header'
 import Message from '../components/ui/Message';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { socket } from '../socket';
 import { IconBrandTelegram } from '@tabler/icons-react'
 import axiosHandler from '../axiosHandler';
@@ -15,6 +15,7 @@ const Chat = () => {
 
     const [ otherUser, setOtherUser ] = useState(null);
     const [ messages, setMessages ] = useState(null);
+    const [ oportunity, setOportunity ] = useState(null);
 
     useEffect(() => {
 
@@ -22,8 +23,11 @@ const Chat = () => {
 
         axiosHandler.GET('conversations/chat/'+id+'/'+session._id)
             .then(data => {
+
                 setMessages(data.messages);
                 setOtherUser(data.other);
+                setOportunity(data.oportunity);
+                console.log(data);
 
             })
             .catch({})
@@ -33,7 +37,6 @@ const Chat = () => {
         const textArea = document.getElementById('list-of-messages');
         textArea.scrollTop = textArea.scrollHeight;
     }, [messages])
-
 
 
     socket.on('server:sendedMessage', () => socket.emit('client:getMessages', id));
@@ -77,8 +80,10 @@ const Chat = () => {
             <Header/>
             <div style={{ content: '', width: '100%', height: '78px' }}></div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '5px 0 7.5px' }} >
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '5px 0 7.5px', flexDirection: 'column' }} >
                 <p className='name-chat-user'><strong>{otherUser == null ? 'Obteniendo nombre...' : `${otherUser.name} ${otherUser.lastname}`}</strong></p>
+                <p className='name-chat-user'>{otherUser == null ? 'Obteniendo nombre...' :  <><b>Vacante:</b> <Link to={'/oportunity/'+oportunity._id}><u>{oportunity.title}</u></Link> </>}</p>
+
             </div>
 
             <div style={{ width: '100%', height: 'calc(100vh - 205px)', backgroundColor: 'white', borderTopLeftRadius: '40px', borderTopRightRadius: '40px', display: 'flex', justifyContent: 'center', alignItems: 'start', paddingTop: 20 }} >
@@ -93,13 +98,13 @@ const Chat = () => {
                           </div>
                         : messages.map((m, index) => 
                                 m.label !== undefined
-                                ? <>
+                                ? <React.Fragment key={'msg-'+index}>
                                     <div style={{ width: '100%', backgroundColor: '#F0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'ceter', marginTop: '10px', marginBottom: '10px', borderRadius: '5px' }}>
                                         <p className='text-black font-bold text-sm'>{m.label}</p>                                
                                     </div>
                                     
                                     <Message key={'msg-'+index} mine={session._id === m.sender} body={m.message} time={m.time}/> 
-                                </>
+                                </React.Fragment>
                                 : <Message key={'msg-'+index} mine={session._id === m.sender} body={m.message} time={m.time}/> 
                           )
                             

@@ -4,7 +4,7 @@ const schema = new Schema({
     name: { type: String, required: true },
     pic: { type: String, required: true },
     description: { type: String, required: true },
-    branches: { type: Array, required: true },
+    branches: { type: Array, required: true, default: [] },
 },{
     timestamps: true
 });

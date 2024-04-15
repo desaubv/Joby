@@ -1,46 +1,54 @@
-import { IconPlus, IconCamera, IconFileCv, IconMinus } from '@tabler/icons-react'
 import Swal from 'sweetalert2'
 import Input from '../components/ui/Input'
 import React, { useRef, useState } from 'react'
 import axiosHandler from '../axiosHandler'
 import Header from '../components/ui/Header'
 import Button from '../components/ui/Button'
-import CvModal from '../components/ui/CvModal'
-import EditDescModal from '../components/ui/EditDescModal'
-import { 
-  IconUserCog, 
-  IconSettings, 
-  IconUsers, 
-  IconBuilding, 
-  IconDots 
-} from '@tabler/icons-react'
+import { IconUsers, IconCamera } from '@tabler/icons-react'
 import './content.css'
-
-import { Document, Page } from '@react-pdf/renderer';
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 const disabilitiesList = [
-  "Informatica",
-  "Medicina y farmaceutica",
+  "Informática y tecnología",
+  "Medicina y farmacia",
   "Ensamblaje",
-  "Alimentacion y bebidas",
-  "Consultorias",
-  "Fabricacion",
+  "Alimentación y bebidas",
+  "Consultorías",
+  "Fabricación",
   "Productos",
   "Servicios",
+  "Educación",
+  "Energía y recursos naturales",
+  "Construcción",
+  "Transporte y logística",
+  "Entretenimiento",
+  "Finanzas y seguros",
+  "Telecomunicaciones",
+  "Turismo y hospitalidad",
+  "Publicidad y marketing",
+  "Ingeniería",
+  "Arte y diseño",
+  "Agricultura y ganadería",
+  "Medios de comunicación",
+  "Automotriz",
+  "Bienes raíces",
+  "Ambiental",
+  "Legal"
 ];
 
 function AddCompany() {
 
-    const session = JSON.parse( window.localStorage.getItem('session') );
-
     const cropperRef = useRef(null);
   
-    const [picFile, setPicFile] = useState(null);
-    const [pdfFile, setPdfFile] = useState(null);
-  
+    const [picFile, setPicFile] = useState(null);  
     const [urlImage, setUrlImage] = useState(null);
-  
     const [dragging, setDragging] = useState(false);
+    const [ formData, setFormData ] = useState({
+      name: '',
+      description: '',
+      branches: []
+    })
   
     const Toast = Swal.mixin({
       toast: true,
@@ -81,8 +89,6 @@ function AddCompany() {
       }else if(files[0].type.startsWith('image/')){
         setPicFile(files[0]);
         setUrlImage(URL.createObjectURL(files[0]))
-      }else if(files[0].type === "application/pdf"){
-        setPdfFile(files[0])
       }else{
         Toast.fire({
           title: `El tipo de archivo no es valido, favor de ingresar archivos de imagen o pdf`,
@@ -103,8 +109,6 @@ function AddCompany() {
       }else if(files[0].type.startsWith('image/')){
         setPicFile(files[0]);
         setUrlImage(URL.createObjectURL(files[0]))
-      }else if(files[0].type === "application/pdf"){
-        setPdfFile(files[0])
       }else{
         Toast.fire({
           title: `El tipo de archivo no es valido, favor de ingresar archivos de imagen o pdf`,
@@ -119,22 +123,23 @@ function AddCompany() {
     }
   
     const handleSubmit = () => {
-      const formData = new FormData();
-      if(picFile !== null) formData.append( "pic", picFile );
-      if(pdfFile !== null) formData.append( "cv", pdfFile );
-  
-      axiosHandler.POST(`login/signin/${session._id}/4`, formData)
-        .then(data => {
-          localStorage.setItem('session', JSON.stringify(data));
-          window.location.href = "/step4"
-        }).catch(err => {})
+      const axiosData = new FormData();
+
+      axiosData.append('name', formData.name);
+      axiosData.append('description', formData.description);
+      axiosData.append('branches', formData.branches);
+
+      axiosData.append( "pic", picFile );
+      
+      console.log(axiosData);
+
+      axiosHandler.POST('enterprise', axiosData)
+        .then(data => window.location.href = '/joincompany')
+        .catch({  })
     }
 
     const [ showInputOther, setShowInputOther ] = useState(false);
-    const [ formData1, setFormData1 ] = useState({
-      gender: "",
-      disabilities: []  
-    });
+
 
     const handleChangeCB = (e) => {
       const { name, value, type, checked } = e.target;
@@ -142,21 +147,21 @@ function AddCompany() {
       if(type === "checkbox"){
   
         if(checked){
-          const disa = [...formData1.disabilities]
+          const disa = [...formData.branches]
   
           disa.push(name);
-          setFormData1({...formData1, "disabilities": disa});
+          setFormData({...formData, "branches": disa});
         }else{
-          const disa = formData1.disabilities.filter(item => item !== name);
-          setFormData1({...formData1, "disabilities": disa});
+          const disa = formData.branches.filter(item => item !== name);
+          setFormData({...formData, "branches": disa});
         }
   
       }else if(type === "text"){
   
-        const disa = formData1.disabilities.filter(item => disabilitiesList.indexOf(item) > -1);
+        const disa = formData.branches.filter(item => disabilitiesList.indexOf(item) > -1);
   
         disa.push(value);
-        setFormData1({...formData1, "disabilities": disa});
+        setFormData({...formData, "branches": disa});
   
       }
     }
@@ -176,16 +181,16 @@ function AddCompany() {
         <div className='content bg-pink'>
           <Header />
           <div className='w-full pt-20 pb-8 text-center flex items-center justify-center'>
-            <h1 className='text-1xl font-bold mr-1'>Coloca los datos de tu empresa</h1>
+            <h1 className='text-xl font-bold mr-1'>Coloca los datos de tu empresa</h1>
             <IconUsers className='h-6 w-6 mr-2  '/>         
           </div>  
           <div className='ml-2 mb-2'>
-            <p className='text-lg font-bold'>Nombre de la empresa:</p>
+            <p className='text-lg font-bold ml-6'>Nombre de la empresa:</p>
           </div>
           <div className='flex justify-center'>
-            <input type='text' placeholder = 'Nombre' className='w-80 text-black font-normal text-left border border-black p-2 mr-3 mb-3 login-input'></input>            
+            <input type='text' placeholder = 'Nombre' className='w-80 text-black font-normal text-left border border-black p-2 mr-3 mb-3 login-input' onChange={ (e) => setFormData({...formData, ['name']: e.target.value}) } />            
           </div>   
-          <p className='text-black text-lg font-bold ml-2 mb-2 mt-4'>Logotipo de la empresa</p>
+          <p className='text-black text-lg font-bold ml-2 mb-2 mt-4 ml-6 mt-8'>Logotipo de la empresa</p>
           <div className='dnd text-center w-3/4 m-auto mb-4' style={{ cursor: 'pointer' }} onClick={(e) => selectFile("input-file-pic")} >
                           
             {
@@ -211,13 +216,13 @@ function AddCompany() {
               
           </div>          
           <div className='ml-2'>
-              <p className='text-lg font-bold mb-3'>Descripción de tu empresa:</p>
+              <p className='text-lg font-bold mb-3 ml-6 mt-8'>Descripción de tu empresa:</p>
           </div>                 
            <div className='flex justify-center'>
-              <textarea placeholder='Cuentanos de tu empresa...' className='w-80 h-24 text-black font-normal text-left border border-black text-area'></textarea> 
+              <textarea placeholder='Cuentanos de tu empresa...' className='w-80 h-24 text-black font-normal text-left border border-black text-area p-2' onChange={ (e) => setFormData({...formData, ['description']: e.target.value}) }></textarea> 
            </div>   
            <div className='ml-2 mt-3 signup-card rounded-2xl'>
-              <p className='text-black text-lg font-bold mb-2'>¿De qué rubro es tu empresa?</p>
+              <p className='text-black text-lg font-bold mb-2 ml-6 mt-8'>¿De qué rubro es tu empresa?</p>
            </div>   
            <div className='ml-9'>
                 {
@@ -227,13 +232,34 @@ function AddCompany() {
               <Input id="Otra" name="Otra" variantI="check" variantL="check" label="Otra" type="checkbox" extraL="text-black" onChange={(e) => setShowInputOther(e.target.checked)}/>
               {
                 showInputOther
-                ? <Input id="Other" variantI="base" label="¿Qué discapacidad?" type="text" extraL="text-black" onChange={handleChangeCB}/> 
+                ? <Input id="Other" variantI="base" label="¿Que rubro es? (Si es mas de uno separalos por comas)" type="text" extraL="text-black" onChange={handleChangeCB}/> 
                 : <></>
               }
             </div> 
             <div className='flex justify-center mb-3 mt-2'>
-              <Button variant="btnLink" extra="text-white sig-btn" onClick={handleSubmit}>Finalizar</Button>  
+              <Button variant="btnLink" extra="text-white sig-btn" onClick={handleSubmit}>Crear</Button>  
             </div> 
+
+            {
+              urlImage !== null 
+              ? <div style={{ position: 'fixed', width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: "5", top: 0, left: 0, display: 'flex', justifyContent: 'center', alignItems: 'center',flexDirection: 'column'  }}>
+                  <div style={{ width: '80%', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                            
+                  <Cropper
+                    src={urlImage}
+                    style={{ height: 400, width: "100%" }}
+                    initialAspectRatio={1}
+                    aspectRatio={1}
+                    guides={true}
+                    ref={cropperRef}
+                  />
+
+                  </div>
+                  <Button variant="btnLink" extra='text-black back-btn' onClick={onCrop}>Recortar</Button> 
+                  <Button variant="btnLink" extra='text-black back-btn' onClick={() => { setPicFile(null); setUrlImage(null); }}>Cancelar</Button>
+                </div> 
+                : <></>
+            }
         </div>        
     ) 
  }    

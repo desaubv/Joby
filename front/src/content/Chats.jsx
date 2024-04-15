@@ -48,6 +48,7 @@ const Chats = () => {
                             <ChatItem
                                 id={c._id}
                                 key={"chat-item-"+index}
+                                oportunity={c.oportunity}
                                 img={c.pic}
                                 name={c.name+' '+c.lastname}
                                 message={c.lastMessage}

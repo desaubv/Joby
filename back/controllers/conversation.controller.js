@@ -3,6 +3,7 @@ const MongooseHandler = require('../classes/MongooseHandler');
 const ConversationModel = require('../models/conversation.model');
 const UsersModel = require('../models/users.model');
 const MessageModel = require('../models/message.model');
+const OportunutyModel = require('../models/oportunity.model');
 
 const ConversationHandler = new MongooseHandler(ConversationModel);
 const UsersHandler = new MongooseHandler(UsersModel);
@@ -23,6 +24,8 @@ const oportunityController = (io) => {
             const returnData = conversations.map(async(c) => {
                 const datita = {};
 
+                const oportunity = await OportunutyModel.findById(c.oportunityId);
+
                 if(c.userId1 !== id){
                     const user = await UsersModel.findById(c.userId1);
                     const lastMessage = await MessageModel.findOne({conversationId: c._id, conversationIndex: c.conversationIndex});
@@ -31,9 +34,10 @@ const oportunityController = (io) => {
                     datita.pic = user.pic;
                     datita.name = user.name;
                     datita.lastname = user.lastname;
-                    datita.lastMessage = lastMessage.sender == c.userId1 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
+                    datita.lastMessage = lastMessage == null ? "( No hay mensajes )" : lastMessage.sender == c.userId1 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
                     datita.time = lastMessage.time;
                     datita.date = lastMessage.date;
+                    datita.oportunity = oportunity == null ? '' : oportunity.title;
                     
 
                 }else{
@@ -44,10 +48,11 @@ const oportunityController = (io) => {
                     datita.pic = user.pic;
                     datita.name = user.name;
                     datita.lastname = user.lastname;
-                    datita.lastMessage = lastMessage.sender == c.userId2 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
+                    datita.lastMessage = lastMessage == null ? "( No hay mensajes )" : lastMessage.sender == c.userId2 ? (user.name+': '+lastMessage.message) : ('Tu: '+lastMessage.message);
                     datita.time = lastMessage !== null ? lastMessage.time : '';
                     datita.date = lastMessage !== null ? lastMessage.date : '';
                     datita.readen = lastMessage !== null ? lastMessage.readen : false;
+                    datita.oportunity = oportunity.title;
                 }
 
                 return datita;
@@ -70,39 +75,59 @@ const oportunityController = (io) => {
 
         
         ConversationHandler.findById(conversationId)
-        .then(async(c) => {
-            const otherUserID = (c.userId1 !== userId) ? c.userId1 : c.userId2;
-            
-            UsersHandler.findById(otherUserID)
-                .then(otherUser => {
-                    const other = {};
+            .then(async(c) => {
+                const otherUserID = (c.userId1 !== userId) ? c.userId1 : c.userId2;
                 
-                    other['name'] = otherUser.name;
-                    other['lastname'] = otherUser.lastname;
+                UsersHandler.findById(otherUserID)
+                    .then(async(otherUser) => {
+                        const other = {};
+                    
+                        other['name'] = otherUser.name;
+                        other['lastname'] = otherUser.lastname;
 
-                    MessagesHandler.find({ conversationId: conversationId }, { conversationId: 1 })
-                        .then(messages => {
-                            const labels = [];
+                        const oportunity = await OportunutyModel.findById(c.oportunityId);
 
-                            const response = messages.map(m => {
-                                const label = determinarFecha(m.date, m.time);
-                                if( !labels.includes(label) ){
-                                    labels.push(label);
-                                    const tmp = m.toObject();
-                                    tmp.label = label;
+                        MessagesHandler.find({ conversationId: conversationId }, { conversationId: 1 })
+                            .then(messages => {
+                                const labels = [];
 
-                                    return tmp;
-                                }
+                                    
 
-                                return m;
+                                const response = messages.map(m => {
+                                    const label = determinarFecha(m.date, m.time);
+                                    if( !labels.includes(label) ){
+                                        labels.push(label);
+                                        const tmp = m.toObject();
+                                        tmp.label = label;
+
+                                        return tmp;
+                                    }
+
+                                    return m;
+                                })
+
+                                HTTPHandler.okResponse(res, { other, messages: response, oportunity }) 
                             })
+                            .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
 
-                            HTTPHandler.okResponse(res, { other, messages: response }) 
-                        })
-                        .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
-
-                }).catch(err =>{ HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }); console.log("VALIO VERGA", err); } );
+                    }).catch(err =>{ HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }); console.log("VALIO VERGA", err); } );
             }).catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE }));
+    }
+
+    controller.createConversation = async(req, res) => {
+        const { success, body } = HTTPHandler.getBody( req,  ["oportunityId", "userId1", "userId2"] );
+
+        if(success){
+            ConversationHandler.create(body)
+                .then(data => HTTPHandler.okResponse(res, data))
+                .catch(err => HTTPHandler.serverError(res, { error: err, message: 'Error en la base de datos', type: HTTPHandler.TYPE.DATABASE })  )
+        }else{
+            HTTPHandler.clientError(res, {
+                message: "Alguno de los valores no fue ingresado correctamente",
+                requiredParams: body,
+                type: HTTPHandler.TYPE.UNCOMPLETE_PARAMS
+            });
+        }
     }
 
 

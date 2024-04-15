@@ -1,9 +1,10 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import axios from 'axios'
+import { server } from './constants'
 
 const Handler = {}
-const backend = 'http://localhost:8080/api/';
+const backend = server+'api/';
 
 const COLORS = {
     warning: "#F7D900",
@@ -251,6 +252,98 @@ Handler.GET = async(route) => {
                 default:
                     text = `
                             <p><b><big> ERROR: ${err.type} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+            }   
+
+            reject(err);
+        });
+    });
+}
+
+Handler.DELETE = async(route) => {
+    return new Promise((resolve, reject) => {
+        axios.delete(backend+route)
+        .then(res => {
+            resolve(res.data);
+        }).catch(res => {
+            const { data:err } = res.response;
+
+            console.error("ERROR "+err.type, err);
+            
+            switch(err.type){
+                case "UNCOMPLETE_PARAMS": 
+                        var text = `
+                            <p><b><big> ${err.message} </big></b></p><br>
+                            <ul>
+                        `;
+
+                        for(var key in err.requiredParams){
+                            if(!err.requiredParams[key]) text += `<li><b>Falta el valor:</b> ${key}</li>`
+                        }
+
+                        text += "</ul>"
+
+                        Swal.fire({
+                            icon: "warning",
+                            iconColor: COLORS.warning,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "ROUTE_NOT_CONFIGURED": 
+                        text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>se hizo una peticion a la ruta <u><i>${err.route}</i></u> con el metodo <u><i>${err.method}</i></u> pero no esta configurado.</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                    break;
+                case "DEFAULT":
+                        text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
+                            <p>${err.message}</p>
+                        `;
+
+                        Swal.fire({
+                            icon: "error",
+                            iconColor: COLORS.error,
+                            html: text,
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: COLORS.main
+                        });
+                        break;
+                case "LOGIN":
+                    text = `
+                        <p><b><big> ${err.message} </big></b></p><br>
+                    `;
+
+                    Swal.fire({
+                        icon: "info",
+                        iconColor: COLORS.info,
+                        html: text,
+                        confirmButtonText: "Aceptar",
+                        confirmButtonColor: COLORS.main
+                    });
+                    break;
+                default:
+                    text = `
+                            <p><b><big> ERROR: ${err.error} </big></b></p><br>
                             <p>${err.message}</p>
                         `;
 

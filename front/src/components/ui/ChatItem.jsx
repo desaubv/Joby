@@ -4,7 +4,7 @@ import {
   } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
-const ChatItem = ({ name, message, time, img, id, readen }) => {
+const ChatItem = ({ name, message, time, img, id, readen, oportunity }) => {
 
     return (
         <Link to={'/chat/'+id} className='list-chats'>
@@ -13,8 +13,10 @@ const ChatItem = ({ name, message, time, img, id, readen }) => {
             </div>
 
             <div className='name-chat-grid'>
-                <div style={{ width: '80%', height: '100%', display: 'flex', alignItems: 'end' }}>
-                    <p className='text-md'><strong>{name}</strong></p>
+                <div style={{ width: '80%', height: '100%', display: 'flex', alignItems: 'start', flexDirection: 'column', justifyContent: 'start' }}>
+                    <p className='text-xs' style={{whiteSpace: 'nowrap', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 5}}><strong>{oportunity}</strong></p>
+                    <p className='text-md' style={{whiteSpace: 'nowrap', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis'}}><strong>{name}</strong></p>
+
                 </div>
 
                 <div style={{ width: '20%', height: '100%', display: 'flex', alignItems: 'end', justifyContent: 'center' }}>
@@ -27,7 +29,8 @@ const ChatItem = ({ name, message, time, img, id, readen }) => {
             
             <div className='message-chat-grid'>
             <div style={{ width: '80%', height: '100%', display: 'flex', alignItems: 'center' }}>
-                    <p className='text-md'>{message}</p>
+                    <p className='text-md' style={{whiteSpace: 'nowrap', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis'}}>{message}</p>
+
                 </div>
 
                 <div style={{ width: '20%', height: '100%', display: 'flex', alignItems: 'end', justifyContent: 'center' }}>
