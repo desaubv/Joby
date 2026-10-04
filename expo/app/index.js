@@ -1,12 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { getToken } from '../services/auth';
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../theme/useTheme';
+import Layout from '../components/Layout';
+import Button from '../components/Button';
+import { ThemeProvider } from '../theme/themeProvider';
 
 export default function App() {
 
     const router = useRouter();
+    const { theme, setTheme } = useTheme();
     
     useEffect(() => {
         async function checkSession() {
@@ -17,15 +21,14 @@ export default function App() {
             console.log(token);
         }
 
-        checkSession();
+        // checkSession();
     }, []);
 
-
     return (
-        <View style={styles.container}>
-            <Text>Hello World!</Text>
-            <StatusBar style="auto" />
-        </View>
+        <Layout>
+            <Button
+            >Hola</Button>
+        </Layout>
     );
 }
 

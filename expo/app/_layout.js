@@ -1,35 +1,24 @@
 import { Stack } from "expo-router";
+import { ThemeProvider } from "../theme/themeProvider";
 
 export default function RootLayout() {
     return (
-        <Stack>
-            <Stack.Screen
-                name="index"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            
-            <Stack.Screen
-                name="auth"
-                options={{
-                    headerShown: false,
-                }}
-            />
+        <ThemeProvider>
+            <Stack
+                screenOptions={{ headerShown: false }}
+            >
+                <Stack.Screen
+                    name="index"
+                    options={{
+                        title: "Hoel"
+                    }}
+                />
 
-            {/* <Stack.Screen
-                name="(tabs)"
-                options={{
-                    headerShown: false,
-                }}
-            /> */}
-
-            {/* <Stack.Screen
-                name="jobs/[id]"
-                options={{
-                    title: "Empleo",
-                }}
-            /> */}
-        </Stack>
+                <Stack.Screen
+                    name="auth"
+                />
+                
+            </Stack>
+        </ThemeProvider>
     );
 }

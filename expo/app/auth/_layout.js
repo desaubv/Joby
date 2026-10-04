@@ -8,27 +8,23 @@ export default function AuthLayout() {
     useEffect(() => {
         async function checkSession() {
             const token = await getToken();
-            if(token) router.replace("/");
+            if (token) router.replace("/");
         }
-        
+
         checkSession();
     }, []);
 
     return (
-        <Stack>
+        <Stack
+            screenOptions={{ headerShown: false }}
+
+        >
             <Stack.Screen
                 name="login"
-                options={{
-                    title: "Iniciar sesión",
-                    headerShown: false,
-                }}
             />
 
             <Stack.Screen
                 name="register"
-                options={{
-                    title: "Crear cuenta",
-                }}
             />
         </Stack>
     );
