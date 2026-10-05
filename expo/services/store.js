@@ -90,7 +90,7 @@ class StoreClass {
             throw new TypeError("Store key must be a non-empty string");
         }
 
-        return `${this.name}:${key}`;
+        return `${this.name}-${key}`;
     }
 }
 

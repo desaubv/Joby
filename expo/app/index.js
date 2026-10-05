@@ -1,34 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { getToken } from '../services/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../theme/useTheme';
-import Layout from '../components/Layout';
-import Button from '../components/Button';
-import { ThemeProvider } from '../theme/themeProvider';
-
+import ScreenLayout from '../components/Screen';
 export default function App() {
 
     const router = useRouter();
-    const { theme, setTheme } = useTheme();
-    
+
     useEffect(() => {
         async function checkSession() {
             const token = await getToken();
 
-            if(!token) router.replace('/auth/login');
+            if (!token) router.replace('/auth');
 
             console.log(token);
         }
 
-        // checkSession();
+        checkSession();
     }, []);
 
     return (
-        <Layout>
-            <Button
-            >Hola</Button>
-        </Layout>
+        <ScreenLayout>
+        </ScreenLayout>
     );
 }
 

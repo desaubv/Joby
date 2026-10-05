@@ -16,8 +16,8 @@ const baseTheme = {
         //     semibold:   "LexendDeca-SemiBold",
         //     thin:       "LexendDeca-Thin",
         // },
-
     },
+
     spacing: {
         xs: 4,
         sm: 8,
@@ -47,21 +47,18 @@ export const themes = {
         ...baseTheme,
 
         colors: {
-            background: "#FFFFFF",
-            surface: "#F5F5F5",
+            background: "#f0f6fe",
+            surface: "#fafbfe",
 
-            text: "#111111",
-            textSecondary: "#555555",
-            buttonText: "#FFFFFF",
+            primary: "#087E8B",
+            secondary: "#549df1",
 
-            primary: "#2563EB",
-            onPrimary: "#FFFFFF",
-
-            border: "#D1D5DB",
-
-            success: "#16A34A",
-            warning: "#CA8A04",
-            error: "#DC2626",
+            text: {
+                heading: "#087E8B",
+                text: "#181818",
+                secondary: "#555555",
+                button: "#f3f6fd"
+            }
         },
     },
 
@@ -72,19 +69,16 @@ export const themes = {
         colors: {
             background: "#121212",
             surface: "#1E1E1E",
+            
+            primary: "#087E8B",
+            secondary: "#0e5fe7",
 
-            text: "#FFFFFF",
-            textSecondary: "#BBBBBB",
-            buttonText: "#FFFFFF",
-
-            primary: "#60A5FA",
-            onPrimary: "#000000",
-
-            border: "#555555",
-
-            success: "#4ADE80",
-            warning: "#FACC15",
-            error: "#F87171",
+            text: {
+                heading: "#0e3477",
+                text: "#ececec",
+                secondary: "#9e9e9e",
+                button: "#f3f6fd"
+            }
         },
     },
 
