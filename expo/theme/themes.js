@@ -31,7 +31,7 @@ const baseTheme = {
         sm: "25%",
         md: "50%",
         lg: "70%",
-        xl: "90%",
+        xl: "85%",
     },
 
     radius: {
@@ -58,7 +58,16 @@ export const themes = {
                 text: "#181818",
                 secondary: "#555555",
                 button: "#f3f6fd"
-            }
+            },
+
+            input: {
+                border: "#D8E1EA",
+                background: "#FFFFFF",
+            },
+
+            success: "#6ac668",
+            warning: "#dbec5e",
+            error: "#ec5e5e",
         },
     },
 
@@ -74,11 +83,21 @@ export const themes = {
             secondary: "#0e5fe7",
 
             text: {
-                heading: "#0e3477",
+                heading: "#087E8B",
                 text: "#ececec",
                 secondary: "#9e9e9e",
                 button: "#f3f6fd"
-            }
+            },
+
+            input: {
+                border: "#D8E1EA",
+                background: "#1E1E1E",
+            },
+            
+
+            success: "#00FF00",
+            warning: "#FFFF00",
+            error: "#FF0000",
         },
     },
 

@@ -1,8 +1,8 @@
 import React from "react";
 import Text from "./Text";
-import { useTheme } from "../theme/useTheme";
+import { useTheme } from "../../theme/useTheme";
 
-const Bold = ({
+const Subtitle = ({
     children,
     style,
     ...props
@@ -13,7 +13,10 @@ const Bold = ({
         <Text
             style={[
                 {
-                    fontWeight: "700",
+                    fontSize: theme.text.subtitleSize,
+                    lineHeight: theme.text.subtitleSize * 1.3,
+                    fontWeight: "600",
+                    marginBottom: theme.spacing.sm,
                 },
                 style,
             ]}
@@ -24,4 +27,4 @@ const Bold = ({
     );
 };
 
-export default Bold;
+export default Subtitle;

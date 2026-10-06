@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { getToken } from '../services/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import ScreenLayout from '../components/Screen';
+import ScreenLayout from '../components/layout/Screen';
 export default function App() {
 
     const router = useRouter();
@@ -11,7 +11,7 @@ export default function App() {
         async function checkSession() {
             const token = await getToken();
 
-            if (!token) router.replace('/auth');
+            if (!token) router.replace('/signin');
 
             console.log(token);
         }
