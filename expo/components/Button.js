@@ -107,8 +107,8 @@ const Button = ({
 
             outlineWidth:
                 isGhost
-                    ? 0
-                    : 2,
+                    ? theme.thicknesses.none
+                    : theme.thicknesses.sm,
 
             outlineColor:
                 theme.colors.primary,

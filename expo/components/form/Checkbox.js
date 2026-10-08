@@ -6,6 +6,7 @@ import {
     StyleSheet,
 } from "react-native";
 import { Check } from "lucide-react-native";
+import { themes } from "../../theme/themes";
 
 export default function Checkbox({
     label,
@@ -20,6 +21,49 @@ export default function Checkbox({
             onValueChange?.(!value);
         }
     };
+
+    const styles = StyleSheet.create({
+        container: {
+            minHeight: 48,
+
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+
+            paddingVertical: 8,
+        },
+
+        label: {
+            flex: 1,
+            fontSize: themes.text.baseSize,
+            color: "#26384A",
+
+            marginRight: 16,
+        },
+
+        checkbox: {
+            width: 24,
+            height: 24,
+
+            borderWidth: 2,
+            borderColor: "#53677D",
+            borderRadius: 6,
+
+            alignItems: "center",
+            justifyContent: "center",
+
+            backgroundColor: "#FFFFFF",
+        },
+
+        checked: {
+            backgroundColor: "#53677D",
+            borderColor: "#53677D",
+        },
+
+        disabled: {
+            opacity: 0.5,
+        },
+    });
 
     return (
         <Pressable
@@ -52,46 +96,3 @@ export default function Checkbox({
         </Pressable>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        minHeight: 48,
-
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-
-        paddingVertical: 8,
-    },
-
-    label: {
-        flex: 1,
-        fontSize: 16,
-        color: "#26384A",
-
-        marginRight: 16,
-    },
-
-    checkbox: {
-        width: 24,
-        height: 24,
-
-        borderWidth: 2,
-        borderColor: "#53677D",
-        borderRadius: 6,
-
-        alignItems: "center",
-        justifyContent: "center",
-
-        backgroundColor: "#FFFFFF",
-    },
-
-    checked: {
-        backgroundColor: "#53677D",
-        borderColor: "#53677D",
-    },
-
-    disabled: {
-        opacity: 0.5,
-    },
-});

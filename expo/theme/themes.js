@@ -18,6 +18,14 @@ const baseTheme = {
         // },
     },
 
+    thicknesses: {
+        none: 0,
+        xs: 1.5,
+        sm: 2,
+        md: 2.5,
+        lg: 3
+    },
+
     spacing: {
         xs: 4,
         sm: 8,

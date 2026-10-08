@@ -2,7 +2,7 @@ import { Stack, useRoute, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { getToken } from "../../services/auth";
 
-export default function AuthLayout() {
+export default function SignInLayout() {
     const router = useRouter();
 
     useEffect(() => {

@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 const ComponentName = () => {
     return (
         <View>
-            <Text>Company</Text>
+            <Text>COMPANY!</Text>
         </View>
     );
 };

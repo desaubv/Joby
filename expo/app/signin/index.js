@@ -12,9 +12,9 @@ import Button from "../../components/Button";
 import Bold from "../../components/Text/Bold";
 import { ArrowRight } from "lucide-react-native";
 
-export default function IndexAuth() {
+export default function LoggerScreen() {
 
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
     const { width } = useWindowDimensions();
 
     const styles = StyleSheet.create({
@@ -66,6 +66,7 @@ export default function IndexAuth() {
         },
 
         bottomContainer: {
+            width: theme.size.lg,
             gap: 15,
             marginTop: "auto",
             marginBottom: theme.spacing.lg
@@ -78,7 +79,7 @@ export default function IndexAuth() {
                 <View style={styles.logoContainer}>
                     <AppImage
                         source={icon}
-                        size={100}
+                        size={85}
                     />
                     <Text style={styles.logoText}>Joby</Text>
                 </View>
@@ -98,7 +99,7 @@ export default function IndexAuth() {
                     <Button href="signin/login">Iniciar Sesión</Button>
                     <Button href="signin/register" variant="secondary">Crear cuenta</Button>
 
-                    <Button href="signin/company" variant="ghost" iconRight={ArrowRight}>¿Eres una empresa?</Button>
+                    <Button href="signin/register/company" variant="ghost" iconRight={ArrowRight}>¿Eres una empresa?</Button>
                 </View>
 
             </View>

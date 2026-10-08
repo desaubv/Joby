@@ -16,15 +16,14 @@ import { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
 
-export default function IndexAuth() {
+export default function LoginScreen() {
 
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
     const { width } = useWindowDimensions();
 
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-
 
 
     const styles = StyleSheet.create({
@@ -42,7 +41,7 @@ export default function IndexAuth() {
                 : "100%",
 
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "start",
 
             borderRadius: theme.radius.lg
         },
@@ -76,7 +75,6 @@ export default function IndexAuth() {
 
         bottomContainer: {
             width: theme.size.xl,
-            gap: 15,
             marginTop: "auto",
             marginBottom: theme.spacing.lg
         },
@@ -92,7 +90,7 @@ export default function IndexAuth() {
                 <View style={styles.logoContainer}>
                     <AppImage
                         source={icon}
-                        size={75}
+                        size={65}
                     />
                     <Text style={styles.logoText}>Joby</Text>
                 </View>
@@ -153,8 +151,9 @@ export default function IndexAuth() {
 
                 <View style={styles.bottomContainer}>
                     <Text style={{ textAlign: "center" }}>
-                        ¿No tienes cuenta? <Button style={{ margin: 0, padding: 0 }} href="signin/register" variant="ghost">Regístrate</Button>
+                        ¿No tienes cuenta?
                     </Text>
+                    <Button style={{ margin: 0, padding: 0 }} href="signin/register" variant="ghost">Regístrate</Button>
                 </View>
 
             </View>

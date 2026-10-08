@@ -15,7 +15,7 @@ export default function RootLayout() {
                 />
 
                 <Stack.Screen
-                    name="auth"
+                    name="signin"
                 />
                 
             </Stack>

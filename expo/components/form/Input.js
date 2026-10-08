@@ -60,9 +60,9 @@ export default function Input({
         container: {
             height: 64,
 
-            borderWidth: 1.5,
+            borderWidth: theme.thicknesses.xs,
             borderColor: theme.colors.input.border,
-            borderRadius: 16,
+            borderRadius: theme.radius.md,
             backgroundColor: theme.colors.input.background,
 
             flexDirection: "row",
@@ -83,7 +83,7 @@ export default function Input({
             flex: 1,
             height: "100%",
 
-            fontSize: 18,
+            fontSize: theme.text.baseSize,
             color: theme.colors.text.text,
 
             paddingVertical: 0,
@@ -110,7 +110,7 @@ export default function Input({
             marginTop: 6,
             marginLeft: 4,
 
-            fontSize: 14,
+            fontSize: theme.text.smallSize,
             color: theme.colors.error
         },
     });
