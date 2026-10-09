@@ -1,26 +1,45 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import AppImage from "../../../components/AppImage";
-
-import { useTheme } from "../../../theme/useTheme";
-
-import ScreenLayout from "../../../components/layout/Screen";
-import icon from "../../../assets/logos/icon.png";
-import Text from "../../../components/Text/Text";
-import Button from "../../../components/Button";
-import Title from "../../../components/Text/Title";
-import Input from "../../../components/form/Input";
-
-import { Mail, ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useRouter } from "expo-router";
 
-export default function RecoveryScreen() {
+import { useTheme } from "../../../theme/useTheme";
+import useForm from "../../../components/form/useForm";
 
+import ScreenLayout from "../../../components/layout/Screen";
+import AppImage from "../../../components/AppImage"; 
+import Title from "../../../components/Text/Title";
+import Input from "../../../components/form/Input";
+import icon from "../../../assets/logos/icon.png";
+import Form from "../../../components/form/Form";
+import Text from "../../../components/Text/Text";
+import Button from "../../../components/Button";
+
+import { Mail, ArrowLeft } from "lucide-react-native";
+
+export default function RecoveryScreen() {
     const router = useRouter();
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
 
-    const [email, setEmail] = useState("");
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
+
+    const handleSubmit = async (values) => {
+        const { email, password } = values;
+
+        console.log(email, password);
+        setButtonsDisabled(true);
+
+        const href = "signin/recovery/code";
+        router.push(href);
+    };
+
+    const form = useForm({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        onSubmit: handleSubmit
+    });
 
     const styles = StyleSheet.create({
         container: {
@@ -83,7 +102,7 @@ export default function RecoveryScreen() {
 
     return (
         <ScreenLayout centered>
-            <View style={styles.container}>
+            <Form style={styles.container} form={form}>
                 <View style={styles.logoContainer}>
                     <AppImage
                         source={icon}
@@ -97,28 +116,29 @@ export default function RecoveryScreen() {
                     <Text style={{ marginBottom: theme.spacing.md, marginTop: -theme.spacing.sm }} variant="secondary">Ingresa tu correo electronico para continuar.</Text>
 
                     <Input
+                        name="email"
+                        required
+                        requiredMessage="Es necesario ingresar un correo electrónico."
                         placeholder="Correo electrónico"
-                        type="email"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                         iconLeft={Mail}
                         style={styles.input}
-
                         regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
                         warning="Ingresa un correo electrónico válido."
-
-
-                        value={email}
-                        onChangeText={setEmail}
+                        disabled={buttonsDisabled}
                     />
+
                     <View
                         style={{ width: "100%", alignItems: "start", marginTop: theme.spacing.xl, marginBottom: theme.spacing.lg }}
                     >
-                        <Button href="signin/recovery/code" style={styles.button}>Enviar código de recuperación</Button>
+                        <Button disabled={buttonsDisabled} onPress={form.submit} style={styles.button}>Enviar código de recuperación</Button>
 
                     </View>
-                    <Button onPress={()=> router.back()}  variant="ghost" iconLeft={ArrowLeft}>Volver atras</Button>
+                    <Button disabled={buttonsDisabled} onPress={() => router.back()} variant="ghost" iconLeft={ArrowLeft}>Volver atras</Button>
                 </View>
 
-            </View>
+            </Form>
         </ScreenLayout>
     );
 }

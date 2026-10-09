@@ -1,26 +1,44 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import AppImage from "../../../components/AppImage";
+import { useState } from "react";
 
 import { useTheme } from "../../../theme/useTheme";
+import useForm from "../../../components/form/useForm";
 
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import VerificationCodeInput from "../../../components/form/VerificationCodeInput";
 import ScreenLayout from "../../../components/layout/Screen";
-import icon from "../../../assets/logos/icon.png";
+import AppImage from "../../../components/AppImage";
+import Title from "../../../components/Text/Title";
+import Form from "../../../components/form/Form";
 import Text from "../../../components/Text/Text";
 import Button from "../../../components/Button";
-import Title from "../../../components/Text/Title";
-import Input from "../../../components/form/Input";
 
-import { Hash, ArrowLeft } from "lucide-react-native";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react-native";
 import { useRouter } from "expo-router";
+
+import icon from "../../../assets/logos/icon.png";
 
 export default function RecoveryCodeScreen() {
 
-    const router  = useRouter();
+    const router = useRouter();
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
-    const [email, setEmail] = useState("");
+
+    const handleSubmit = async (values) => {
+        const { code } = values;
+
+        console.log(code);
+        setButtonsDisabled(true);
+    };
+
+    const form = useForm({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        onSubmit: handleSubmit
+    });
 
     const styles = StyleSheet.create({
         container: {
@@ -83,7 +101,7 @@ export default function RecoveryCodeScreen() {
 
     return (
         <ScreenLayout centered>
-            <View style={styles.container}>
+            <Form style={styles.container} form={form}>
                 <View style={styles.logoContainer}>
                     <AppImage
                         source={icon}
@@ -96,28 +114,25 @@ export default function RecoveryCodeScreen() {
                     <Title style={{ textAlign: "start" }}>Recuperar contraseña</Title>
                     <Text style={{ marginBottom: theme.spacing.md, marginTop: -theme.spacing.sm }} variant="secondary">Te llegará un código a tu correo. Ingresalo enseguida.</Text>
 
-                    <Input
-                        placeholder="Código de recuperacion"
-                        type="number"
-                        iconLeft={Hash}
-                        style={styles.input}
-
-                        regex={/^\d{6}$/}
-                        warning="Ingresa un código válido."
-
-
-                        value={email}
-                        onChangeText={setEmail}
+                    <VerificationCodeInput
+                        style={{ marginTop: theme.spacing.md }}
+                        required
+                        requiredMessage="Ingresa el código de verificación."
+                        name="code"
+                        length={6}
+                        mode="numeric"
+                        label="Código de verificación"
+                        disabled={form.isSubmitting || buttonsDisabled}
                     />
                     <View
-                        style={{ width: "100%", alignItems: "start", marginTop: theme.spacing.xl}}
+                        style={{ width: "100%", alignItems: "start", marginTop: theme.spacing.xl }}
                     >
-                        <Button style={styles.button}>Verificar código</Button>
+                        <Button onPress={form.submit} style={styles.button} disabled={form.isSubmitting || buttonsDisabled}>Verificar código</Button>
                     </View>
                 </View>
-                <Button onPress={()=> router.back()} variant="ghost" iconLeft={ArrowLeft}>Volver atras</Button>
+                <Button disabled={buttonsDisabled} onPress={() => router.back()} variant="ghost" iconLeft={ArrowLeft}>Volver atras</Button>
 
-            </View>
+            </Form>
         </ScreenLayout>
     );
 }

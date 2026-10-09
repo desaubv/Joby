@@ -65,7 +65,8 @@ export const themes = {
                 heading: "#087E8B",
                 text: "#181818",
                 secondary: "#555555",
-                button: "#f3f6fd"
+                button: "#f3f6fd",
+                ghost: "#b9b4b4",
             },
 
             input: {

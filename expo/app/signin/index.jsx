@@ -1,15 +1,16 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
-import AppImage from "../../components/AppImage";
 
 import { useTheme } from "../../theme/useTheme";
 
 import ScreenLayout from "../../components/layout/Screen";
+import AppImage from "../../components/AppImage";
+import Bold from "../../components/Text/Bold";
+import Text from "../../components/Text/Text";
+import Button from "../../components/Button";
 
 import banner from "../../assets/images/auth_banner.png";
 import icon from "../../assets/logos/icon.png";
-import Text from "../../components/Text/Text";
-import Button from "../../components/Button";
-import Bold from "../../components/Text/Bold";
+
 import { ArrowRight } from "lucide-react-native";
 
 export default function LoggerScreen() {

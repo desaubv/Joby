@@ -1,29 +1,44 @@
+import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
-import AppImage from "../../components/AppImage";
 
 import { useTheme } from "../../theme/useTheme";
+import useForm from "../../components/form/useForm";
 
 import ScreenLayout from "../../components/layout/Screen";
-import icon from "../../assets/logos/icon.png";
-import Text from "../../components/Text/Text";
-import Button from "../../components/Button";
+import AppImage from "../../components/AppImage";
 import Title from "../../components/Text/Title";
 import Input from "../../components/form/Input";
 import Line from "../../components/layout/Line";
+import icon from "../../assets/logos/icon.png";
+import Text from "../../components/Text/Text";
+import Form from "../../components/form/Form";
+import Button from "../../components/Button";
 
 import { Mail, Lock, EyeOff, Eye } from "lucide-react-native";
-import { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
-
 export default function LoginScreen() {
-
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
 
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+    const [ buttonsDisabled, setButtonsDisabled ] = useState(false);
+
+    const handleSubmit = async (values) => {
+        const { email, password } = values;
+
+        console.log(email, password);
+        setButtonsDisabled(true);
+
+    };
+
+    const form = useForm({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        onSubmit: handleSubmit
+    });
 
 
     const styles = StyleSheet.create({
@@ -86,7 +101,10 @@ export default function LoginScreen() {
 
     return (
         <ScreenLayout centered>
-            <View style={styles.container}>
+            <Form
+                form={form}
+                style={styles.container}
+            >
                 <View style={styles.logoContainer}>
                     <AppImage
                         source={icon}
@@ -95,45 +113,51 @@ export default function LoginScreen() {
                     <Text style={styles.logoText}>Joby</Text>
                 </View>
 
+
                 <View style={styles.basicContainer}>
                     <Title style={{ textAlign: "start" }}>Iniciar Sesión</Title>
                     <Text style={{ marginBottom: theme.spacing.md, marginTop: -theme.spacing.sm }} variant="secondary">Ingresa tu cuenta para continuar.</Text>
 
+
                     <Input
+                        name="email"
+                        required
+                        requiredMessage="Es necesario ingresar un correo electrónico."
                         placeholder="Correo electrónico"
-                        type="email"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                         iconLeft={Mail}
                         style={styles.input}
-
                         regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
                         warning="Ingresa un correo electrónico válido."
-
-
-                        value={email}
-                        onChangeText={setEmail}
+                        disabled={buttonsDisabled}
                     />
 
                     <Input
-                        style={styles.input}
+                        name="password"
+                        required
+                        requiredMessage="Es necesario ingresar la contraseña."
                         placeholder="Contraseña"
                         secureTextEntry={!showPassword}
-
-                        value={password}
-                        onChangeText={setPassword}
-
                         regex={/^(?=.*[A-Z])(?=.*\d).{6,}$/}
                         warning="Mínimo 6 caracteres, una mayúscula y un número."
-
+                        style={styles.input}
                         iconLeft={Lock}
                         iconRight={showPassword ? EyeOff : Eye}
                         onIconRightPress={() => setShowPassword(!showPassword)}
+                        disabled={buttonsDisabled}
                     />
+
                     <View
                         style={{ width: "100%", alignItems: "flex-end", marginBottom: theme.spacing.md }}
                     >
-                        <Button href="signin/recovery" variant="ghost">¿Olvidaste tu contraseña?</Button>
+                        <Button disabled={buttonsDisabled} href="signin/recovery" variant="ghost">¿Olvidaste tu contraseña?</Button>
                     </View>
-                    <Button style={styles.button}>Iniciar Sesión</Button>
+                    <Button
+                        style={styles.button}
+                        onPress={form.submit}
+                        disabled={form.isSubmitting || buttonsDisabled}
+                    >Iniciar Sesión</Button>
                 </View>
 
                 <Line
@@ -146,30 +170,29 @@ export default function LoginScreen() {
                 />
 
                 <View style={styles.basicContainer}>
-                    <Button style={styles.button} variant="secondary" iconLeft={GoogleIcon}>Google</Button>
+                    <Button disabled={buttonsDisabled} style={styles.button} variant="secondary" iconLeft={GoogleIcon}>Google</Button>
                 </View>
 
                 <View style={styles.bottomContainer}>
                     <Text style={{ textAlign: "center" }}>
                         ¿No tienes cuenta?
                     </Text>
-                    <Button style={{ margin: 0, padding: 0 }} href="signin/register" variant="ghost">Regístrate</Button>
+                    <Button disabled={buttonsDisabled} style={{ margin: 0, padding: 0 }} href="signin/register" variant="ghost">Regístrate</Button>
                 </View>
 
-            </View>
+            </Form>
         </ScreenLayout>
     );
 }
 
-const GoogleIcon = ({
-    size = 20,
-    color = theme.colors.text.primary,
-}) => {
+const GoogleIcon = ({ size = 20, color }) => {
+    const { theme } = useTheme();
+
     return (
         <AntDesign
             name="google"
             size={size}
-            color={color}
+            color={color ?? theme.colors.text.primary}
         />
     );
 };

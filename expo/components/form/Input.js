@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
     View,
@@ -6,12 +7,21 @@ import {
     Pressable,
     StyleSheet,
 } from "react-native";
+
 import { useTheme } from "../../theme/useTheme";
+import { useFormField } from "./FormContext";
 
 export default function Input({
+    name,
     value,
     onChangeText,
     placeholder,
+
+    label,
+    required = false,
+    requiredMessage = "Este campo es obligatorio.",
+
+    disabled = false,
 
     iconLeft: IconLeft,
     iconRight: IconRight,
@@ -31,44 +41,75 @@ export default function Input({
 
     ...props
 }) {
-    const [isValid, setIsValid] = useState(true);
     const { theme } = useTheme();
 
+    const {
+        value: formValue,
+        onChangeText: setFormValue,
+        error: formError,
+    } = useFormField({
+        name,
+        required,
+        requiredMessage,
+        regex,
+        warning,
+    });
+
+    const currentValue = value ?? formValue ?? "";
+    const handleChangeText = onChangeText ?? setFormValue;
+
+    // El campo queda bloqueado si disabled o editable=false.
+    const isEditable = editable && !disabled;
+
+    const [localError, setLocalError] = useState(null);
+
     useEffect(() => {
-        // Si no se proporcionó regex, no validar
-        if (!regex) {
-            setIsValid(true);
+        // La validación del formulario tiene prioridad.
+        if (formError !== undefined) {
+            setLocalError(null);
             return;
         }
 
-        // No mostrar error mientras esté vacío
-        if (!value) {
-            setIsValid(true);
+        if (!regex || !currentValue) {
+            setLocalError(null);
             return;
         }
 
-        setIsValid(regex.test(value));
-    }, [value, regex]);
+        regex.lastIndex = 0;
+        const valid = regex.test(String(currentValue));
+        regex.lastIndex = 0;
 
-    const showWarning = regex && value && !isValid;
+        setLocalError(valid ? null : warning);
+    }, [currentValue, regex, warning, formError]);
+
+    const validationMessage = formError ?? localError;
+    const showWarning = Boolean(validationMessage);
 
     const styles = StyleSheet.create({
         wrapper: {
             width: "100%",
         },
 
+        label: {
+            marginBottom: 6,
+            fontSize: theme.text.baseSize,
+            color: theme.colors.text.text,
+        },
+
+        required: {
+            color: theme.colors.error,
+        },
+
         container: {
             height: 64,
-
             borderWidth: theme.thicknesses.xs,
             borderColor: theme.colors.input.border,
             borderRadius: theme.radius.md,
             backgroundColor: theme.colors.input.background,
-
             flexDirection: "row",
             alignItems: "center",
-
             paddingHorizontal: 16,
+            opacity: isEditable ? 1 : 0.6,
         },
 
         containerWarning: {
@@ -82,10 +123,8 @@ export default function Input({
         input: {
             flex: 1,
             height: "100%",
-
             fontSize: theme.text.baseSize,
             color: theme.colors.text.text,
-
             paddingVertical: 0,
             paddingHorizontal: 0,
         },
@@ -99,24 +138,29 @@ export default function Input({
         rightButton: {
             width: 40,
             height: 40,
-
             alignItems: "center",
             justifyContent: "center",
-
             marginLeft: 8,
         },
 
         warning: {
             marginTop: 6,
             marginLeft: 4,
-
             fontSize: theme.text.smallSize,
-            color: theme.colors.error
+            color: theme.colors.error,
         },
     });
 
     return (
         <View style={[styles.wrapper, style]}>
+            {label ? (
+                <Text style={styles.label}>
+                    {label}
+                    {required && (
+                        <Text style={styles.required}> *</Text>
+                    )}
+                </Text>
+            ) : null}
 
             <View
                 style={[
@@ -134,32 +178,28 @@ export default function Input({
                 )}
 
                 <TextInput
-                    value={value}
-                    onChangeText={onChangeText}
+                    value={currentValue}
+                    onChangeText={handleChangeText}
                     placeholder={placeholder}
                     placeholderTextColor="#9AA9BA"
-
                     secureTextEntry={secureTextEntry}
                     keyboardType={keyboardType}
                     autoCapitalize={autoCapitalize}
                     autoCorrect={autoCorrect}
-
-                    editable={editable}
-
+                    editable={isEditable}
                     style={[
                         styles.input,
                         IconLeft && styles.inputWithLeftIcon,
                         IconRight && styles.inputWithRightIcon,
                         inputStyle,
                     ]}
-
                     {...props}
                 />
 
                 {IconRight && (
                     <Pressable
                         onPress={onIconRightPress}
-                        disabled={!onIconRightPress}
+                        disabled={!onIconRightPress || !isEditable}
                         style={styles.rightButton}
                         hitSlop={8}
                     >
@@ -174,11 +214,9 @@ export default function Input({
 
             {showWarning && (
                 <Text style={styles.warning}>
-                    {warning}
+                    {validationMessage}
                 </Text>
             )}
-
         </View>
     );
 }
-
