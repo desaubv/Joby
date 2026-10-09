@@ -22,8 +22,8 @@ export default function RecoveryCodeScreen() {
     const router = useRouter();
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
-    const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
     const handleSubmit = async (values) => {
         const { code } = values;
@@ -33,10 +33,6 @@ export default function RecoveryCodeScreen() {
     };
 
     const form = useForm({
-        initialValues: {
-            email: "",
-            password: "",
-        },
         onSubmit: handleSubmit
     });
 

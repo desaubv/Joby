@@ -1,5 +1,11 @@
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+
 import {
     View,
     Text,
@@ -18,7 +24,7 @@ import {
 } from "lucide-react-native";
 
 import { useTheme } from "../../theme/useTheme";
-import { useFormField } from "./FormContext";
+import { FormContext, useFormField } from "./FormContext";
 
 export default function Select({
     name,
@@ -49,49 +55,75 @@ export default function Select({
     ...props
 }) {
     const { theme } = useTheme();
+    const form = useContext(FormContext);
 
-    const [visible, setVisible] = useState(false);
-    const [search, setSearch] = useState("");
+    const isFormConnected = Boolean(form && name);
+    const isControlled = value !== undefined;
 
     const isDisabled = disabled || !editable;
 
+    const formValue = isFormConnected
+        ? form.values?.[name]
+        : undefined;
+
+    // Prioridad: valor externo > valor del formulario > valor vacío.
+    const selectedValue = isControlled
+        ? value
+        : isFormConnected
+            ? formValue ?? ""
+            : "";
+
     const selectedOption = options.find(
-        (option) => option.value === value
+        (option) => option.value === selectedValue
     );
 
     const { error: formError } = useFormField({
         name,
-        value,
+        value: selectedValue,
         required,
         requiredMessage,
         warning,
     });
 
+    const [visible, setVisible] = useState(false);
+    const [search, setSearch] = useState("");
     const [showValidation, setShowValidation] = useState(false);
+    const [localError, setLocalError] = useState(null);
 
     useEffect(() => {
-        if (!formError) return;
-        setShowValidation(true);
+        if (formError) {
+            setShowValidation(true);
+        }
     }, [formError]);
 
-    const localError =
-        showValidation && required && (value == null || value === "")
-            ? requiredMessage
-            : null;
+    useEffect(() => {
+        setLocalError(null);
+    }, [selectedValue]);
 
-    const validationMessage = formError || localError;
+    const isEmpty =
+        selectedValue == null || selectedValue === "";
+
+    const validationMessage =
+        localError ||
+        formError ||
+        (
+            showValidation && required && isEmpty
+                ? requiredMessage
+                : null
+        );
+
     const showWarning = Boolean(validationMessage);
+
+    const normalize = (text) =>
+        String(text ?? "")
+            .toLocaleLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
     const filteredOptions = useMemo(() => {
         if (!searchable || !search.trim()) {
             return options;
         }
-
-        const normalize = (text) =>
-            String(text)
-                .toLocaleLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
 
         const query = normalize(search.trim());
 
@@ -113,10 +145,19 @@ export default function Select({
     };
 
     const selectOption = (option) => {
-        if (option.disabled) return;
+        if (option.disabled || isDisabled) return;
 
-        onValueChange?.(option.value);
+        setLocalError(null);
         setShowValidation(true);
+
+        if (onValueChange) {
+            // Modo controlado: el padre administra el valor.
+            onValueChange(option.value);
+        } else if (isFormConnected) {
+            // Modo Form: el formulario administra el valor.
+            form.setValue(name, option.value);
+        }
+
         closeModal();
     };
 
@@ -368,21 +409,28 @@ export default function Select({
                                 </Text>
                             }
                             renderItem={({ item }) => {
-                                const selected = item.value === value;
+                                const selected =
+                                    item.value === selectedValue;
 
                                 return (
                                     <Pressable
                                         onPress={() => selectOption(item)}
-                                        disabled={item.disabled}
+                                        disabled={
+                                            isDisabled || item.disabled
+                                        }
                                         accessibilityRole="button"
                                         accessibilityState={{
                                             selected,
-                                            disabled: Boolean(item.disabled),
+                                            disabled: Boolean(
+                                                isDisabled || item.disabled
+                                            ),
                                         }}
                                         style={[
                                             styles.option,
                                             selected && styles.selectedOption,
-                                            item.disabled && { opacity: 0.45 },
+                                            item.disabled && {
+                                                opacity: 0.45,
+                                            },
                                         ]}
                                     >
                                         <Text style={styles.optionText}>

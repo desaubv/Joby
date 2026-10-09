@@ -1,4 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+
+import React, {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
+
 import {
     View,
     Animated,
@@ -12,33 +20,40 @@ import Text from "../Text/Text";
 
 const Step = () => null;
 
-const Stepper = ({
+const Stepper = forwardRef(({
     children,
     initialStep = 0,
     showNavigation = true,
     onStepChange,
     style,
-}) => {
+}, ref) => {
     const { theme } = useTheme();
+
     const steps = React.Children.toArray(children).filter(
         (child) => React.isValidElement(child)
     );
+
     const totalSteps = steps.length;
 
     const [currentStep, setCurrentStep] = useState(
-        Math.min(Math.max(initialStep, 0), Math.max(totalSteps - 1, 0))
+        Math.min(
+            Math.max(initialStep, 0),
+            Math.max(totalSteps - 1, 0)
+        )
     );
+
     const [isChecking, setIsChecking] = useState(false);
     const [validationMessage, setValidationMessage] = useState("");
     const [lineWidths, setLineWidths] = useState([]);
 
-    // Progreso animado de cada conexión entre dos indicadores.
+    // Animación de las líneas de progreso.
     const lineProgress = useRef([]);
+
     while (lineProgress.current.length < Math.max(totalSteps - 1, 0)) {
         lineProgress.current.push(new Animated.Value(0));
     }
 
-    // Animación del contenido al cambiar de paso.
+    // Animación del contenido.
     const contentOpacity = useRef(new Animated.Value(1)).current;
     const contentTranslateX = useRef(new Animated.Value(0)).current;
     const previousStep = useRef(currentStep);
@@ -77,6 +92,94 @@ const Stepper = ({
 
         Animated.parallel(animations).start();
     }, [currentStep, totalSteps]);
+
+    const currentStepElement = steps[currentStep];
+    const currentStepProps = currentStepElement?.props ?? {};
+
+    const changeStep = (step) => {
+        if (
+            step < 0 ||
+            step >= totalSteps ||
+            step === currentStep
+        ) {
+            return false;
+        }
+
+        setCurrentStep(step);
+        setValidationMessage("");
+        onStepChange?.(step);
+
+        return true;
+    };
+
+    // Avanza únicamente si la validación lo permite.
+    const next = async () => {
+        if (currentStep >= totalSteps - 1 || isChecking) {
+            return false;
+        }
+
+        const { check } = currentStepProps;
+
+        setValidationMessage("");
+
+        if (typeof check === "function") {
+            setIsChecking(true);
+
+            try {
+                const result = await check();
+
+                if (result !== true) {
+                    setValidationMessage(
+                        typeof result === "string"
+                            ? result
+                            : "Revisa los datos de este paso antes de continuar."
+                    );
+
+                    return false;
+                }
+            } catch (error) {
+                setValidationMessage(
+                    error instanceof Error && error.message
+                        ? error.message
+                        : "No se pudo validar este paso."
+                );
+
+                return false;
+            } finally {
+                setIsChecking(false);
+            }
+        } else if (check === false) {
+            setValidationMessage(
+                "Revisa los datos de este paso antes de continuar."
+            );
+
+            return false;
+        }
+
+        return changeStep(currentStep + 1);
+    };
+
+    // Retrocede sin validar.
+    const previous = () => {
+        if (isChecking || currentStep <= 0) {
+            return false;
+        }
+
+        return changeStep(currentStep - 1);
+    };
+
+    // Métodos públicos accesibles desde el componente padre.
+    useImperativeHandle(ref, () => ({
+        next,
+        prev: previous,
+
+        getCurrentStep: () => currentStep,
+
+        goTo: (step) => {
+            if (isChecking) return false;
+            return changeStep(step);
+        },
+    }));
 
     const styles = StyleSheet.create({
         container: {
@@ -157,14 +260,6 @@ const Stepper = ({
         navigationButton: {
             width: "45%",
         },
-        navigationText: {
-            color: theme.colors.primary,
-            fontSize: theme.text.baseSize,
-            fontWeight: "600",
-        },
-        disabledText: {
-            color: theme.colors.text.disabled,
-        },
         validationMessage: {
             marginTop: theme.spacing.sm,
             color: theme.colors.text?.error ?? "#B42318",
@@ -174,61 +269,7 @@ const Stepper = ({
 
     if (totalSteps === 0) return null;
 
-    const currentStepElement = steps[currentStep];
-    const { component } = currentStepElement.props;
-
-    const changeStep = (step) => {
-        if (step < 0 || step >= totalSteps || step === currentStep) return;
-
-        setCurrentStep(step);
-        setValidationMessage("");
-        onStepChange?.(step);
-    };
-
-    const next = async () => {
-        if (currentStep >= totalSteps - 1 || isChecking) return;
-
-        const { check } = currentStepElement.props;
-        setValidationMessage("");
-
-        if (typeof check === "function") {
-            setIsChecking(true);
-
-            try {
-                const result = await check();
-
-                if (result !== true) {
-                    setValidationMessage(
-                        typeof result === "string"
-                            ? result
-                            : "Revisa los datos de este paso antes de continuar."
-                    );
-                    return;
-                }
-            } catch (error) {
-                setValidationMessage(
-                    error instanceof Error && error.message
-                        ? error.message
-                        : "No se pudo validar este paso."
-                );
-                return;
-            } finally {
-                setIsChecking(false);
-            }
-        } else if (check === false) {
-            setValidationMessage(
-                "Revisa los datos de este paso antes de continuar."
-            );
-            return;
-        }
-
-        changeStep(currentStep + 1);
-    };
-
-    const previous = () => {
-        if (isChecking || currentStep <= 0) return;
-        changeStep(currentStep - 1);
-    };
+    const { component } = currentStepProps;
 
     return (
         <View style={[styles.container, style]}>
@@ -239,7 +280,10 @@ const Stepper = ({
                     const isCompleted = index < currentStep;
 
                     return (
-                        <View key={step.key ?? index} style={styles.step}>
+                        <View
+                            key={step.key ?? index}
+                            style={styles.step}
+                        >
                             <View style={styles.stepHeader}>
                                 <View
                                     style={[
@@ -248,36 +292,49 @@ const Stepper = ({
                                     ]}
                                     onLayout={(event) => {
                                         if (index === 0) return;
-                                        const width = event.nativeEvent.layout.width;
+
+                                        const width =
+                                            event.nativeEvent.layout.width;
+
                                         setLineWidths((previous) => {
-                                            if (previous[index - 1] === width) return previous;
-                                            const next = [...previous];
-                                            next[index - 1] = width;
-                                            return next;
+                                            if (
+                                                previous[index - 1] === width
+                                            ) {
+                                                return previous;
+                                            }
+
+                                            const nextWidths = [...previous];
+                                            nextWidths[index - 1] = width;
+
+                                            return nextWidths;
                                         });
                                     }}
                                 >
-                                    {index > 0 ? (
+                                    {index > 0 && (
                                         <Animated.View
                                             style={[
                                                 styles.lineFill,
                                                 {
-                                                    width: lineProgress.current[index - 1].interpolate({
+                                                    width: lineProgress.current[
+                                                        index - 1
+                                                    ].interpolate({
                                                         inputRange: [0, 1],
-                                                        outputRange: [0, lineWidths[index - 1] ?? 0],
+                                                        outputRange: [
+                                                            0,
+                                                            lineWidths[index - 1] ?? 0,
+                                                        ],
                                                     }),
                                                 },
                                             ]}
                                         />
-                                    ) : null}
+                                    )}
                                 </View>
 
-                                {/* El indicador es visual; no permite saltar pasos. */}
                                 <View
                                     style={[
                                         styles.indicator,
                                         (isActive || isCompleted) &&
-                                        styles.indicatorActive,
+                                            styles.indicatorActive,
                                     ]}
                                 >
                                     {Icon ? (
@@ -295,7 +352,7 @@ const Stepper = ({
                                             style={[
                                                 styles.number,
                                                 (isActive || isCompleted) &&
-                                                styles.numberActive,
+                                                    styles.numberActive,
                                             ]}
                                         >
                                             {index + 1}
@@ -306,32 +363,45 @@ const Stepper = ({
                                 <View
                                     style={[
                                         styles.line,
-                                        index === totalSteps - 1 && styles.lineHidden,
+                                        index === totalSteps - 1 &&
+                                            styles.lineHidden,
                                     ]}
                                     onLayout={(event) => {
                                         if (index >= totalSteps - 1) return;
-                                        const width = event.nativeEvent.layout.width;
+
+                                        const width =
+                                            event.nativeEvent.layout.width;
+
                                         setLineWidths((previous) => {
-                                            if (previous[index] === width) return previous;
-                                            const next = [...previous];
-                                            next[index] = width;
-                                            return next;
+                                            if (previous[index] === width) {
+                                                return previous;
+                                            }
+
+                                            const nextWidths = [...previous];
+                                            nextWidths[index] = width;
+
+                                            return nextWidths;
                                         });
                                     }}
                                 >
-                                    {index < totalSteps - 1 ? (
+                                    {index < totalSteps - 1 && (
                                         <Animated.View
                                             style={[
                                                 styles.lineFill,
                                                 {
-                                                    width: lineProgress.current[index].interpolate({
+                                                    width: lineProgress.current[
+                                                        index
+                                                    ].interpolate({
                                                         inputRange: [0, 1],
-                                                        outputRange: [0, lineWidths[index] ?? 0],
+                                                        outputRange: [
+                                                            0,
+                                                            lineWidths[index] ?? 0,
+                                                        ],
                                                     }),
                                                 },
                                             ]}
                                         />
-                                    ) : null}
+                                    )}
                                 </View>
                             </View>
 
@@ -355,24 +425,34 @@ const Stepper = ({
                     styles.content,
                     {
                         opacity: contentOpacity,
-                        transform: [{ translateX: contentTranslateX }],
+                        transform: [
+                            { translateX: contentTranslateX },
+                        ],
                     },
                 ]}
             >
                 {component}
+
                 {validationMessage ? (
-                    <Text accessibilityRole="alert" style={styles.validationMessage}>
+                    <Text
+                        accessibilityRole="alert"
+                        style={styles.validationMessage}
+                    >
                         {validationMessage}
                     </Text>
                 ) : null}
             </Animated.View>
 
-            {showNavigation ? (
-                <View style={[styles.navigation]}>
+            {showNavigation && (
+                <View style={styles.navigation}>
                     <Button
                         onPress={previous}
                         disabled={currentStep === 0 || isChecking}
-                        style={[styles.navigationButton, { opacity: currentStep === 0 || isChecking ? 0 : 1 }]}
+                        style={{
+                            ...styles.navigationButton,
+                            opacity:
+                                currentStep === 0 || isChecking ? 0 : 1,
+                        }}
                         variant="secondary"
                     >
                         Anterior
@@ -380,21 +460,21 @@ const Stepper = ({
 
                     <Button
                         onPress={next}
-                        disabled={currentStep === totalSteps - 1 || isChecking}
+                        disabled={
+                            currentStep === totalSteps - 1 || isChecking
+                        }
                         style={styles.navigationButton}
                     >
-                        {isChecking
-                            ? "Validando..."
-                            : currentStep === totalSteps - 1
-                                ? "Finalizar"
-                                : "Siguiente"}
+                        {isChecking ? "Validando..." : "Siguiente"}
                     </Button>
                 </View>
-            ) : null}
+            )}
         </View>
     );
-};
+});
 
-Stepper.Step = Step;
+const StepItem = Stepper.Step = ({
+    component,
+}) => component ?? null;
 
 export default Stepper;

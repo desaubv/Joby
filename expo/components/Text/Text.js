@@ -6,6 +6,8 @@ const Text = ({
     children,
     variant = "primary",
     style,
+    numberOfLines,
+    ellipsizeMode="tail",
     ...props
 }) => {
     const { theme } = useTheme();
@@ -22,6 +24,8 @@ const Text = ({
     return (
         <RNText
             style={[styles.text, style]}
+            numberOfLines={numberOfLines}
+            ellipsizeMode={ellipsizeMode}
             {...props}
         >
             {children}

@@ -9,9 +9,6 @@ export default function RootLayout() {
             >
                 <Stack.Screen
                     name="index"
-                    options={{
-                        title: "Hoel"
-                    }}
                 />
 
                 <Stack.Screen

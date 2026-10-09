@@ -127,10 +127,7 @@ export default function RegisterScreen() {
                         onPress={() => setAccoundType("company")}
 
                     />
-
                 </View>
-
-
 
                 <View style={styles.bottomContainer}>
                     <Button onPress={handleContinue}>Continuar</Button>
