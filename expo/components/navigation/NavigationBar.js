@@ -29,8 +29,6 @@ export default function NavigationBar({
             paddingHorizontal: 8,
             paddingVertical: 8,
             backgroundColor: theme.colors.surface,
-            borderTopWidth: 1,
-            borderTopColor: theme.colors.input.border,
         },
         
         border: {

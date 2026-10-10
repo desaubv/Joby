@@ -2,9 +2,9 @@ const baseTheme = {
     text: {
         smallSize: 14,
         baseSize: 16,
-        headingSize: 22,
         subheadingSize: 18,
-
+        headingSize: 24,
+        big: 30
         // fonts: {
         //     black:      "LexendDeca-Black",
         //     bold:       "LexendDeca-Bold",
@@ -40,6 +40,7 @@ const baseTheme = {
         md: "50%",
         lg: "70%",
         xl: "85%",
+        all: "90%",
     },
 
     radius: {
@@ -47,6 +48,31 @@ const baseTheme = {
         md: 12,
         lg: 24,
     },
+
+    colors: {
+            background: "#f0f6fe",
+            surface: "#fafbfe",
+
+            primary: "#087E8B",
+            secondary: "#549df1",
+
+            text: {
+                heading: "#087E8B",
+                text: "#181818",
+                secondary: "#555555",
+                button: "#f3f6fd",
+                ghost: "#b9b4b4",
+            },
+
+            input: {
+                border: "#D8E1EA",
+                background: "#FFFFFF",
+            },
+
+            success: "#6ac668",
+            warning: "#dbec5e",
+            error: "#ec5e5e",
+        },
 }
 
 export const themes = {
@@ -89,7 +115,7 @@ export const themes = {
             surface: "#1E1E1E",
             
             primary: "#087E8B",
-            secondary: "#0e5fe7",
+            secondary: "#4a82e4",
 
             text: {
                 heading: "#087E8B",
@@ -99,7 +125,7 @@ export const themes = {
             },
 
             input: {
-                border: "#D8E1EA",
+                border: "#767a7e",
                 background: "#1E1E1E",
             },
             
@@ -118,14 +144,21 @@ export const themes = {
             background: "#000000",
             surface: "#000000",
 
-            text: "#FFFFFF",
-            textSecondary: "#FFFFFF",
-            buttonText: "#FFFFFF",
-
             primary: "#FFFF00",
-            onPrimary: "#000000",
+            secondary: "#FFFF00",
 
-            border: "#FFFFFF",
+            text: {
+                heading: "#FFFFFF",
+                text: "#FFFFFF",
+                secondary: "#FFFFFF",
+                button: "#FFFFFF",
+                ghost: "#FFFFFF",
+            },
+
+            input: {
+                border: "#FFFFFF",
+                background: "#FFFFFF",
+            },
 
             success: "#00FF00",
             warning: "#FFFF00",
