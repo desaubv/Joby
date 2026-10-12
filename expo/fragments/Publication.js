@@ -7,31 +7,52 @@ import {
     StyleSheet,
 } from "react-native";
 
+import { useTheme } from "../theme/useTheme";
+
+import Text from "../components/Text/Text";
+import Button from "../components/Button";
+import SkeletonBox from "../components/sketeton/SkeletonBox"
+
 import {
     Heart,
     MessageCircle,
     MoreHorizontal,
     Forward,
 } from "lucide-react-native";
+import SkeletonText from "../components/sketeton/SkeletonText";
+import { chance } from "../services/utilities";
 
-import { useTheme } from "../theme/useTheme";
-import Text from "../components/Text/Text";
-import Button from "../components/Button";
+const defaultPublication = {
+    user: null,
+    content: null,
+    image: null,
+    date: "Ahora",
+    initialLikes: 0,
+    comments: 0,
+    likedInitially: false,
+    onProfilePress: null,
+    onLike: null,
+    onComment: null,
+    onShare: null,
+    onOptions: null,
+}
 
-const Publication = ({
-    user,
-    content,
-    image,
-    date = "Ahora",
-    initialLikes = 0,
-    comments = 0,
-    likedInitially = false,
-    onProfilePress,
-    onLike,
-    onComment,
-    onShare,
-    onOptions,
-}) => {
+const Publication = ({ publication = null }) => {
+    const {
+        user,
+        content,
+        image,
+        date,
+        initialLikes,
+        comments,
+        likedInitially,
+        onProfilePress,
+        onLike,
+        onComment,
+        onShare,
+        onOptions,
+    } = publication ?? defaultPublication;
+
     const { theme } = useTheme();
     const [liked, setLiked] = useState(likedInitially);
     const [likes, setLikes] = useState(initialLikes);
@@ -43,7 +64,7 @@ const Publication = ({
             gap: 14,
             backgroundColor: theme.colors.surface ?? "#FFFFFF",
             borderRadius: 12,
-            borderColor: theme.colors.input.border ?? "#E5E7EB",
+            borderColor: theme.colors.border ?? "#E5E7EB",
             borderBottomWidth: 1,
             marginTop: theme.spacing.sm
         },
@@ -58,7 +79,7 @@ const Publication = ({
             width: 44,
             height: 44,
             borderRadius: 22,
-            backgroundColor: theme.colors.input.border ?? "#E5E7EB",
+            backgroundColor: theme.colors.border ?? "#E5E7EB",
         },
 
         userInfo: {
@@ -92,12 +113,12 @@ const Publication = ({
             width: "100%",
             aspectRatio: 4 / 3,
             borderRadius: 8,
-            backgroundColor: theme.colors.input.border ?? "#E5E7EB",
+            backgroundColor: theme.colors.border ?? "#E5E7EB",
         },
 
         divider: {
             height: 1,
-            backgroundColor: theme.colors.input.border ?? "#E5E7EB",
+            backgroundColor: theme.colors.border ?? "#E5E7EB",
         },
 
         stats: {
@@ -141,7 +162,7 @@ const Publication = ({
             ? { uri: source }
             : source;
 
-    return (
+    return publication ? (
         <View style={styles.container}>
             {/* Encabezado */}
             <View style={styles.header}>
@@ -164,6 +185,7 @@ const Publication = ({
                     onPress={onProfilePress}
                     activeOpacity={0.8}
                 >
+
                     <Text
                         style={styles.userName}
                         numberOfLines={1}
@@ -181,9 +203,9 @@ const Publication = ({
                                 >
                                     {user.role}
                                 </Text>
-                                <Text 
+                                <Text
                                     variant="secondary"
-                                    style={[styles.metadata, {fontSize: theme.text.subheadingSize}]}
+                                    style={[styles.metadata, { fontSize: theme.text.subheadingSize }]}
                                 >·</Text>
                             </>
                         )
@@ -196,15 +218,12 @@ const Publication = ({
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                <Button
                     onPress={onOptions}
                     hitSlop={10}
-                >
-                    <MoreHorizontal
-                        size={22}
-                        color={theme.colors.text.text ?? "#374151"}
-                    />
-                </TouchableOpacity>
+                    icon={MoreHorizontal}
+                    variant="ghost"
+                ></Button>
             </View>
 
             {/* Contenido */}
@@ -228,29 +247,53 @@ const Publication = ({
             {/* Acciones */}
             <View style={styles.actions}>
                 <Button
-                    variant="ghost" 
+                    variant="ghost"
                     iconLeft={Heart}
                     onPress={handleLike}
                 >
                     {`${likes}`}
                 </Button>
-                
-                <Button 
-                    variant="ghost" 
+
+                <Button
+                    variant="ghost"
                     iconLeft={MessageCircle}
                     onPress={onComment}
                 >
                     {`${comments}`}
                 </Button>
-                
-                <Button 
-                    variant="ghost" 
+
+                <Button
+                    variant="ghost"
                     iconLeft={Forward}
                     onPress={onShare}
                 >
                     {`${comments}`}
                 </Button>
             </View>
+        </View>
+    ) : (
+        <View style={styles.container}>
+            {/* Encabezado */}
+            <View style={styles.header}>
+
+                <SkeletonBox
+                    width={44}
+                    height={44}
+                    radius={22}
+                />
+
+                <View style={styles.userInfo}>
+                    <SkeletonText width="30%" />
+                    <SkeletonText width="60%" />
+                </View>
+            </View>
+
+            <SkeletonText
+                lastLineWidth="70%"
+                numberOfLines={3}
+            />
+
+            {/* Acciones */}
         </View>
     );
 };

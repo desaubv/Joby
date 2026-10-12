@@ -1,4 +1,3 @@
-
 import React, {
     forwardRef,
     useEffect,
@@ -35,7 +34,7 @@ const Stepper = forwardRef(({
 
     const totalSteps = steps.length;
 
-    const [currentStep, setCurrentStep] = useState(
+    const [currentStep, setCurrentStep] = useState(() =>
         Math.min(
             Math.max(initialStep, 0),
             Math.max(totalSteps - 1, 0)
@@ -44,24 +43,42 @@ const Stepper = forwardRef(({
 
     const [isChecking, setIsChecking] = useState(false);
     const [validationMessage, setValidationMessage] = useState("");
-    const [lineWidths, setLineWidths] = useState([]);
 
-    // Animación de las líneas de progreso.
-    const lineProgress = useRef([]);
-
-    while (lineProgress.current.length < Math.max(totalSteps - 1, 0)) {
-        lineProgress.current.push(new Animated.Value(0));
-    }
+    // Una única animación para toda la línea de progreso.
+    const lineProgress = useRef(new Animated.Value(0)).current;
 
     // Animación del contenido.
     const contentOpacity = useRef(new Animated.Value(1)).current;
     const contentTranslateX = useRef(new Animated.Value(0)).current;
     const previousStep = useRef(currentStep);
 
+    // Animar la línea según el paso actual.
+    useEffect(() => {
+        const progress =
+            totalSteps > 1
+                ? currentStep / (totalSteps - 1)
+                : 0;
+
+        const animation = Animated.timing(lineProgress, {
+            toValue: progress,
+            duration: 350,
+            useNativeDriver: false,
+        });
+
+        animation.start();
+
+        return () => {
+            animation.stop();
+        };
+    }, [currentStep, totalSteps, lineProgress]);
+
+    // Animar la transición del contenido.
     useEffect(() => {
         if (previousStep.current === currentStep) return;
 
-        const direction = currentStep > previousStep.current ? 1 : -1;
+        const direction =
+            currentStep > previousStep.current ? 1 : -1;
+
         previousStep.current = currentStep;
 
         contentOpacity.setValue(0);
@@ -73,6 +90,7 @@ const Stepper = forwardRef(({
                 duration: 220,
                 useNativeDriver: true,
             }),
+
             Animated.timing(contentTranslateX, {
                 toValue: 0,
                 duration: 220,
@@ -80,18 +98,6 @@ const Stepper = forwardRef(({
             }),
         ]).start();
     }, [currentStep, contentOpacity, contentTranslateX]);
-
-    useEffect(() => {
-        const animations = lineProgress.current.map((progress, index) =>
-            Animated.timing(progress, {
-                toValue: currentStep > index ? 1 : 0,
-                duration: 350,
-                useNativeDriver: false,
-            })
-        );
-
-        Animated.parallel(animations).start();
-    }, [currentStep, totalSteps]);
 
     const currentStepElement = steps[currentStep];
     const currentStepProps = currentStepElement?.props ?? {};
@@ -112,7 +118,7 @@ const Stepper = forwardRef(({
         return true;
     };
 
-    // Avanza únicamente si la validación lo permite.
+    // Avanzar únicamente si la validación lo permite.
     const next = async () => {
         if (currentStep >= totalSteps - 1 || isChecking) {
             return false;
@@ -159,7 +165,7 @@ const Stepper = forwardRef(({
         return changeStep(currentStep + 1);
     };
 
-    // Retrocede sin validar.
+    // Retroceder sin validar.
     const previous = () => {
         if (isChecking || currentStep <= 0) {
             return false;
@@ -171,6 +177,7 @@ const Stepper = forwardRef(({
     // Métodos públicos accesibles desde el componente padre.
     useImperativeHandle(ref, () => ({
         next,
+
         prev: previous,
 
         getCurrentStep: () => currentStep,
@@ -185,38 +192,45 @@ const Stepper = forwardRef(({
         container: {
             width: "100%",
         },
+
         stepsContainer: {
             width: "100%",
             flexDirection: "row",
             alignItems: "flex-start",
+            position: "relative",
         },
+
         step: {
             flex: 1,
             minWidth: 0,
             alignItems: "center",
+            zIndex: 1,
         },
+
         stepHeader: {
             width: "100%",
-            flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
         },
-        line: {
-            flex: 1,
+
+        // Pista de fondo: una sola línea continua.
+        progressTrack: {
+            position: "absolute",
+            left: `${50 / Math.max(totalSteps, 1)}%`,
+            right: `${50 / Math.max(totalSteps, 1)}%`,
+            top: 17,
             height: 2,
             backgroundColor: theme.colors.border,
             overflow: "hidden",
-            position: "relative",
+            zIndex: 0,
         },
-        lineFill: {
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
+
+        // Relleno animado: una sola vista.
+        progressFill: {
+            height: "100%",
             backgroundColor: theme.colors.primary,
         },
-        lineHidden: {
-            opacity: 0,
-        },
+
         indicator: {
             width: 36,
             height: 36,
@@ -225,41 +239,51 @@ const Stepper = forwardRef(({
             alignItems: "center",
             justifyContent: "center",
             borderWidth: 2,
-            borderColor: theme.colors.text.ghost,
+            borderColor: theme.colors.border,
+            backgroundColor: theme.colors.surface,
         },
+
         indicatorActive: {
             backgroundColor: theme.colors.primary,
             borderColor: theme.colors.primary,
         },
+
         number: {
-            color: theme.colors.text.ghost,
+            color: theme.colors.border,
             fontSize: theme.text.baseSize,
             fontWeight: "600",
         },
+
         numberActive: {
             color: theme.colors.text.button,
         },
+
         label: {
             marginTop: theme.spacing.sm,
             color: theme.colors.text.secondary,
             fontSize: theme.text.baseSize,
             textAlign: "center",
         },
+
         labelActive: {
             color: theme.colors.primary,
             fontWeight: "600",
         },
+
         content: {
             marginTop: theme.spacing.lg,
         },
+
         navigation: {
             marginTop: theme.spacing.lg,
             flexDirection: "row",
             justifyContent: "space-between",
         },
+
         navigationButton: {
             width: "45%",
         },
+
         validationMessage: {
             marginTop: theme.spacing.sm,
             color: theme.colors.text?.error ?? "#B42318",
@@ -273,9 +297,31 @@ const Stepper = forwardRef(({
 
     return (
         <View style={[styles.container, style]}>
+            {/* Encabezado de pasos */}
             <View style={styles.stepsContainer}>
+                {/* Línea continua detrás de los indicadores */}
+                {totalSteps > 1 && (
+                    <View
+                        pointerEvents="none"
+                        style={styles.progressTrack}
+                    >
+                        <Animated.View
+                            style={[
+                                styles.progressFill,
+                                {
+                                    width: lineProgress.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: ["0%", "100%"],
+                                    }),
+                                },
+                            ]}
+                        />
+                    </View>
+                )}
+
                 {steps.map((step, index) => {
                     const { label, icon: Icon } = step.props;
+
                     const isActive = index === currentStep;
                     const isCompleted = index < currentStep;
 
@@ -285,51 +331,6 @@ const Stepper = forwardRef(({
                             style={styles.step}
                         >
                             <View style={styles.stepHeader}>
-                                <View
-                                    style={[
-                                        styles.line,
-                                        index === 0 && styles.lineHidden,
-                                    ]}
-                                    onLayout={(event) => {
-                                        if (index === 0) return;
-
-                                        const width =
-                                            event.nativeEvent.layout.width;
-
-                                        setLineWidths((previous) => {
-                                            if (
-                                                previous[index - 1] === width
-                                            ) {
-                                                return previous;
-                                            }
-
-                                            const nextWidths = [...previous];
-                                            nextWidths[index - 1] = width;
-
-                                            return nextWidths;
-                                        });
-                                    }}
-                                >
-                                    {index > 0 && (
-                                        <Animated.View
-                                            style={[
-                                                styles.lineFill,
-                                                {
-                                                    width: lineProgress.current[
-                                                        index - 1
-                                                    ].interpolate({
-                                                        inputRange: [0, 1],
-                                                        outputRange: [
-                                                            0,
-                                                            lineWidths[index - 1] ?? 0,
-                                                        ],
-                                                    }),
-                                                },
-                                            ]}
-                                        />
-                                    )}
-                                </View>
-
                                 <View
                                     style={[
                                         styles.indicator,
@@ -359,50 +360,6 @@ const Stepper = forwardRef(({
                                         </Text>
                                     )}
                                 </View>
-
-                                <View
-                                    style={[
-                                        styles.line,
-                                        index === totalSteps - 1 &&
-                                            styles.lineHidden,
-                                    ]}
-                                    onLayout={(event) => {
-                                        if (index >= totalSteps - 1) return;
-
-                                        const width =
-                                            event.nativeEvent.layout.width;
-
-                                        setLineWidths((previous) => {
-                                            if (previous[index] === width) {
-                                                return previous;
-                                            }
-
-                                            const nextWidths = [...previous];
-                                            nextWidths[index] = width;
-
-                                            return nextWidths;
-                                        });
-                                    }}
-                                >
-                                    {index < totalSteps - 1 && (
-                                        <Animated.View
-                                            style={[
-                                                styles.lineFill,
-                                                {
-                                                    width: lineProgress.current[
-                                                        index
-                                                    ].interpolate({
-                                                        inputRange: [0, 1],
-                                                        outputRange: [
-                                                            0,
-                                                            lineWidths[index] ?? 0,
-                                                        ],
-                                                    }),
-                                                },
-                                            ]}
-                                        />
-                                    )}
-                                </View>
                             </View>
 
                             {label ? (
@@ -420,6 +377,7 @@ const Stepper = forwardRef(({
                 })}
             </View>
 
+            {/* Contenido del paso actual */}
             <Animated.View
                 style={[
                     styles.content,
@@ -443,6 +401,7 @@ const Stepper = forwardRef(({
                 ) : null}
             </Animated.View>
 
+            {/* Navegación */}
             {showNavigation && (
                 <View style={styles.navigation}>
                     <Button
@@ -451,7 +410,9 @@ const Stepper = forwardRef(({
                         style={{
                             ...styles.navigationButton,
                             opacity:
-                                currentStep === 0 || isChecking ? 0 : 1,
+                                currentStep === 0 || isChecking
+                                    ? 0
+                                    : 1,
                         }}
                         variant="secondary"
                     >
@@ -461,7 +422,8 @@ const Stepper = forwardRef(({
                     <Button
                         onPress={next}
                         disabled={
-                            currentStep === totalSteps - 1 || isChecking
+                            currentStep === totalSteps - 1 ||
+                            isChecking
                         }
                         style={styles.navigationButton}
                     >

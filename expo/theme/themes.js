@@ -1,6 +1,6 @@
 const baseTheme = {
     text: {
-        smallSize: 14,
+        smallSize: 12,
         baseSize: 16,
         subheadingSize: 18,
         headingSize: 24,
@@ -95,10 +95,7 @@ export const themes = {
                 ghost: "#b9b4b4",
             },
 
-            input: {
-                border: "#D8E1EA",
-                background: "#FFFFFF",
-            },
+            border: "#D8E1EA",
 
             success: "#6ac668",
             warning: "#dbec5e",

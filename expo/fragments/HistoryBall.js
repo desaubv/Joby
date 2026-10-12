@@ -10,13 +10,23 @@ import {
 import { useTheme } from "../theme/useTheme";
 
 import Text from "../components/Text/Text";
+import SkeletonText from "../components/sketeton/SkeletonText";
+import SkeletonBox from "../components/sketeton/SkeletonBox";
 
-const HistoryBall = ({
-    image,
-    text,
-    onPress,
-    seen = false,
-}) => {
+const defaultHistory = {
+    image: null,
+    text: null,
+    onPress: null,
+    seen: false,
+}
+
+const HistoryBall = ({ history = null }) => {
+    const {
+        image,
+        text,
+        onPress,
+        seen
+    } = history ?? defaultHistory;
     const { theme } = useTheme();
 
     const styles = StyleSheet.create({
@@ -61,7 +71,7 @@ const HistoryBall = ({
         },
     });
 
-    return (
+    return history ? (
         <TouchableOpacity
             style={styles.container}
             onPress={onPress}
@@ -89,6 +99,20 @@ const HistoryBall = ({
                 {text}
             </Text>
         </TouchableOpacity>
+    ) : (
+        <View
+            style={styles.container}
+        >
+            <SkeletonBox
+                width={66}
+                height={66}
+                radius={33}
+            />
+
+            <SkeletonText
+                width="100%"
+            />
+        </View>
     );
 };
 

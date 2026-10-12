@@ -50,7 +50,7 @@ export default function Select({
     style,
     inputStyle,
 
-    warning = "Selecciona una opción válida.",
+    regexMessage = "Selecciona una opción válida.",
 
     ...props
 }) {
@@ -82,7 +82,7 @@ export default function Select({
         value: selectedValue,
         required,
         requiredMessage,
-        warning,
+        regexMessage,
     });
 
     const [visible, setVisible] = useState(false);
@@ -112,7 +112,7 @@ export default function Select({
                 : null
         );
 
-    const showWarning = Boolean(validationMessage);
+    const showregexMessage = Boolean(validationMessage);
 
     const normalize = (text) =>
         String(text ?? "")
@@ -181,14 +181,14 @@ export default function Select({
             flexDirection: "row",
             alignItems: "center",
             borderWidth: theme.thicknesses.xs,
-            borderColor: theme.colors.input.border,
+            borderColor: theme.colors.border,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             paddingHorizontal: 16,
             opacity: isDisabled ? 0.6 : 1,
         },
 
-        containerWarning: {
+        containerregexMessage: {
             borderColor: theme.colors.error,
         },
 
@@ -208,7 +208,7 @@ export default function Select({
             marginLeft: 12,
         },
 
-        warning: {
+        regexMessage: {
             marginTop: 6,
             marginLeft: 4,
             fontSize: theme.text.smallSize,
@@ -224,7 +224,7 @@ export default function Select({
 
         modalContainer: {
             maxHeight: "75%",
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             borderRadius: theme.radius.md,
             overflow: "hidden",
         },
@@ -232,7 +232,7 @@ export default function Select({
         modalHeader: {
             padding: 18,
             borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: theme.colors.input.border,
+            borderBottomColor: theme.colors.border,
         },
 
         modalTitle: {
@@ -247,7 +247,7 @@ export default function Select({
             flexDirection: "row",
             alignItems: "center",
             borderWidth: theme.thicknesses.xs,
-            borderColor: theme.colors.input.border,
+            borderColor: theme.colors.border,
             borderRadius: theme.radius.md,
             paddingHorizontal: 12,
         },
@@ -312,7 +312,7 @@ export default function Select({
                 disabled={isDisabled}
                 style={[
                     styles.container,
-                    showWarning && styles.containerWarning,
+                    showregexMessage && styles.containerregexMessage,
                     inputStyle,
                 ]}
                 {...props}
@@ -338,8 +338,8 @@ export default function Select({
                 />
             </Pressable>
 
-            {showWarning && (
-                <Text style={styles.warning}>
+            {showregexMessage && (
+                <Text style={styles.regexMessage}>
                     {validationMessage}
                 </Text>
             )}

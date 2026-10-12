@@ -1,0 +1,56 @@
+export const selectOptions = {
+    experienceLevels: [
+        { label: "Sin experiencia", value: "no_experience" },
+        { label: "Prácticas profesionales", value: "internship" },
+        { label: "Nivel inicial (Junior)", value: "junior" },
+        { label: "Nivel intermedio (Mid-level)", value: "mid_level" },
+        { label: "Nivel avanzado (Senior)", value: "senior" },
+        { label: "Especialista", value: "specialist" },
+        { label: "Liderazgo o gerencia", value: "leadership" },
+    ],
+
+    educationLevels: [
+        { label: "Sin estudios formales", value: "none" },
+        { label: "Educación primaria", value: "primary" },
+        { label: "Educación secundaria", value: "secondary" },
+        { label: "Bachillerato o preparatoria", value: "high_school" },
+        { label: "Carrera técnica", value: "technical" },
+        { label: "Técnico Superior Universitario (TSU)", value: "associate" },
+        { label: "Licenciatura o ingeniería", value: "bachelor" },
+        { label: "Especialidad", value: "specialty" },
+        { label: "Maestría", value: "master" },
+        { label: "Doctorado", value: "doctorate" },
+    ],
+
+    sectorAreas: [
+        { label: "Tecnologías de la información", value: "it" },
+        { label: "Programación y desarrollo de software", value: "software_development" },
+        { label: "Inteligencia artificial y ciencia de datos", value: "ai_data_science" },
+        { label: "Diseño gráfico y UX/UI", value: "design_ux_ui" },
+        { label: "Administración y gestión empresarial", value: "administration" },
+        { label: "Atención al cliente", value: "customer_service" },
+        { label: "Ventas y comercio", value: "sales" },
+        { label: "Marketing y comunicación", value: "marketing" },
+        { label: "Recursos humanos", value: "human_resources" },
+        { label: "Contabilidad y finanzas", value: "accounting_finance" },
+        { label: "Educación y capacitación", value: "education" },
+        { label: "Ingeniería y manufactura", value: "engineering" },
+        { label: "Logística y transporte", value: "logistics" },
+        { label: "Salud y bienestar", value: "health_wellness" },
+        { label: "Servicios jurídicos", value: "legal_services" },
+        { label: "Oficios y mantenimiento", value: "trades_maintenance" },
+        { label: "Turismo y hospitalidad", value: "tourism_hospitality" },
+        { label: "Trabajo social y atención comunitaria", value: "social_work" },
+        { label: "Investigación y desarrollo", value: "research_development" },
+        { label: "Otra área", value: "other" },
+    ],
+    
+    companySizes: [
+        { label: "Microempresa (1 a 10 empleados)", value: "micro" },
+        { label: "Pequeña empresa (11 a 50 empleados)", value: "small" },
+        { label: "Mediana empresa (51 a 250 empleados)", value: "medium" },
+        { label: "Gran empresa (251 a 1,000 empleados)", value: "large" },
+        { label: "Corporativo (más de 1,000 empleados)", value: "enterprise" },
+    ],
+
+}

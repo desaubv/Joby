@@ -125,7 +125,7 @@ export default function RecoveryScreen() {
                         iconLeft={Mail}
                         style={styles.input}
                         regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
-                        warning="Ingresa un correo electrónico válido."
+                        regexMessage="Ingresa un correo electrónico válido."
                         disabled={buttonsDisabled}
                     />
 

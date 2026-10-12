@@ -37,7 +37,9 @@ export default function Input({
     inputStyle,
 
     regex,
-    warning = "El formato no es válido.",
+    regexMessage = "El formato no es válido.",
+
+    transformFunction,
 
     ...props
 }) {
@@ -52,11 +54,20 @@ export default function Input({
         required,
         requiredMessage,
         regex,
-        warning,
+        regexMessage,
     });
 
     const currentValue = value ?? formValue ?? "";
     const handleChangeText = onChangeText ?? setFormValue;
+
+
+    const handleTextChange = (text) => {
+        const transformedValue = transformFunction
+            ? transformFunction(text)
+            : text;
+
+        handleChangeText(transformedValue);
+    };
 
     // El campo queda bloqueado si disabled o editable=false.
     const isEditable = editable && !disabled;
@@ -79,11 +90,11 @@ export default function Input({
         const valid = regex.test(String(currentValue));
         regex.lastIndex = 0;
 
-        setLocalError(valid ? null : warning);
-    }, [currentValue, regex, warning, formError]);
+        setLocalError(valid ? null : regexMessage);
+    }, [currentValue, regex, regexMessage, formError]);
 
     const validationMessage = formError ?? localError;
-    const showWarning = Boolean(validationMessage);
+    const showregexMessage = Boolean(validationMessage);
 
     const styles = StyleSheet.create({
         wrapper: {
@@ -103,16 +114,16 @@ export default function Input({
         container: {
             height: 64,
             borderWidth: theme.thicknesses.xs,
-            borderColor: theme.colors.input.border,
+            borderColor: theme.colors.border,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             flexDirection: "row",
             alignItems: "center",
             paddingHorizontal: 16,
             opacity: isEditable ? 1 : 0.6,
         },
 
-        containerWarning: {
+        containerregexMessage: {
             borderColor: theme.colors.error,
         },
 
@@ -143,7 +154,7 @@ export default function Input({
             marginLeft: 8,
         },
 
-        warning: {
+        regexMessage: {
             marginTop: 6,
             marginLeft: 4,
             fontSize: theme.text.smallSize,
@@ -165,7 +176,7 @@ export default function Input({
             <View
                 style={[
                     styles.container,
-                    showWarning && styles.containerWarning,
+                    showregexMessage && styles.containerregexMessage,
                 ]}
             >
                 {IconLeft && (
@@ -179,7 +190,7 @@ export default function Input({
 
                 <TextInput
                     value={currentValue}
-                    onChangeText={handleChangeText}
+                    onChangeText={handleTextChange}
                     placeholder={placeholder}
                     placeholderTextColor="#9AA9BA"
                     secureTextEntry={secureTextEntry}
@@ -212,8 +223,8 @@ export default function Input({
                 )}
             </View>
 
-            {showWarning && (
-                <Text style={styles.warning}>
+            {showregexMessage && (
+                <Text style={styles.regexMessage}>
                     {validationMessage}
                 </Text>
             )}

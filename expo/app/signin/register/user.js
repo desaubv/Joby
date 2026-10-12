@@ -2,9 +2,11 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
+import useForm from "../../../components/form/useForm";
 import { useTheme } from "../../../theme/useTheme";
 
 import VerificationCodeInput from "../../../components/form/VerificationCodeInput";
+import FileUpload from "../../../components/form/FileUpload";
 import ScreenLayout from "../../../components/layout/Screen";
 import Stepper from "../../../components/layout/Stepper";
 import Title from "../../../components/Text/Title";
@@ -16,8 +18,9 @@ import Button from "../../../components/Button";
 import Form from "../../../components/form/Form";
 
 import { ChevronLeft } from "lucide-react-native";
-import useForm from "../../../components/form/useForm";
-import FileUpload from "../../../components/form/FileUpload";
+
+import { selectOptions } from "../../../constants/selectOptions"
+import { isEmpty } from "../../../services/utilities";
 
 export default function RegisterUserScreen() {
 
@@ -251,7 +254,7 @@ function PersonalData({ setUser, user, ref }) {
                     autoCapitalize="none"
                     style={styles.input}
                     regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
-                    warning="Ingresa un correo electrónico válido."
+                    regexMessage="Ingresa un correo electrónico válido."
                 />
 
                 <Input
@@ -263,7 +266,7 @@ function PersonalData({ setUser, user, ref }) {
                     style={styles.input}
 
                     regex={/^(?:\d{10}|\+52\d{10})$/}
-                    warning="Ingresa un número de teléfono válido."
+                    regexMessage="Ingresa un número de teléfono válido."
                 />
 
                 <View style={styles.bottomContainer}>
@@ -428,8 +431,6 @@ function ProfesionalData({ setUser, user, ref }) {
     const { width } = useWindowDimensions();
 
     const handleSubmit = async (data) => {
-        console.log({ ...user, ...data });
-
         setUser({ ...user, ...data });
         ref.current?.next();
     };
@@ -438,52 +439,6 @@ function ProfesionalData({ setUser, user, ref }) {
         initialValues: user,
         onSubmit: handleSubmit
     });
-
-    const experienceLevels = [
-        { label: "Sin experiencia", value: "no_experience" },
-        { label: "Prácticas profesionales", value: "internship" },
-        { label: "Nivel inicial (Junior)", value: "junior" },
-        { label: "Nivel intermedio (Mid-level)", value: "mid_level" },
-        { label: "Nivel avanzado (Senior)", value: "senior" },
-        { label: "Especialista", value: "specialist" },
-        { label: "Liderazgo o gerencia", value: "leadership" },
-    ];
-
-    const educationLevels = [
-        { label: "Sin estudios formales", value: "none" },
-        { label: "Educación primaria", value: "primary" },
-        { label: "Educación secundaria", value: "secondary" },
-        { label: "Bachillerato o preparatoria", value: "high_school" },
-        { label: "Carrera técnica", value: "technical" },
-        { label: "Técnico Superior Universitario (TSU)", value: "associate" },
-        { label: "Licenciatura o ingeniería", value: "bachelor" },
-        { label: "Especialidad", value: "specialty" },
-        { label: "Maestría", value: "master" },
-        { label: "Doctorado", value: "doctorate" },
-    ];
-
-    const interestAreas = [
-        { label: "Tecnologías de la información", value: "it" },
-        { label: "Programación y desarrollo de software", value: "software_development" },
-        { label: "Inteligencia artificial y ciencia de datos", value: "ai_data_science" },
-        { label: "Diseño gráfico y UX/UI", value: "design_ux_ui" },
-        { label: "Administración y gestión empresarial", value: "administration" },
-        { label: "Atención al cliente", value: "customer_service" },
-        { label: "Ventas y comercio", value: "sales" },
-        { label: "Marketing y comunicación", value: "marketing" },
-        { label: "Recursos humanos", value: "human_resources" },
-        { label: "Contabilidad y finanzas", value: "accounting_finance" },
-        { label: "Educación y capacitación", value: "education" },
-        { label: "Ingeniería y manufactura", value: "engineering" },
-        { label: "Logística y transporte", value: "logistics" },
-        { label: "Salud y bienestar", value: "health_wellness" },
-        { label: "Servicios jurídicos", value: "legal_services" },
-        { label: "Oficios y mantenimiento", value: "trades_maintenance" },
-        { label: "Turismo y hospitalidad", value: "tourism_hospitality" },
-        { label: "Trabajo social y atención comunitaria", value: "social_work" },
-        { label: "Investigación y desarrollo", value: "research_development" },
-        { label: "Otra área", value: "other" },
-    ];
 
     const styles = StyleSheet.create({
         container: {
@@ -568,9 +523,9 @@ function ProfesionalData({ setUser, user, ref }) {
                     name="interest"
                     label="Área de interés"
                     placeholder="Selecciona un opción"
-                    options={interestAreas}
+                    options={selectOptions.sectorAreas}
                     requiredMessage="Selecciona un área de interés."
-                    
+
                     searchable
                     searchPlaceholder="Ingrese el área de interés"
                 />
@@ -581,7 +536,7 @@ function ProfesionalData({ setUser, user, ref }) {
                     name="experience"
                     label="Nivel de experiencia"
                     placeholder="Selecciona un opción"
-                    options={experienceLevels}
+                    options={selectOptions.experienceLevels}
                     requiredMessage="Selecciona un área de interés."
                     searchable
                     searchPlaceholder="Ingrese el nivel de experiencia"
@@ -593,7 +548,7 @@ function ProfesionalData({ setUser, user, ref }) {
                     name="education"
                     label="Estudios"
                     placeholder="Selecciona un opción"
-                    options={educationLevels}
+                    options={selectOptions.educationLevels}
                     requiredMessage="Selecciona tu nivel de estudios."
                 />
 
@@ -602,9 +557,6 @@ function ProfesionalData({ setUser, user, ref }) {
                     name="hability"
                     placeholder="Ej. Python, diseño, idomas, etc... (opcional)"
                     style={styles.input}
-
-                    regex={/^(?:\d{10}|\+52\d{10})$/}
-                    warning="Ingresa un número de teléfono válido."
                 />
 
                 <View style={styles.bottomContainer}>
@@ -622,23 +574,11 @@ function ImageData({ setUser, user, ref }) {
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
 
-    const [pic, setPic] = useState([]);
-
-    useEffect(() => {
-        const getPic = () => {
-            console.log(pic);
-        }
-
-        getPic();
-
-    }, pic);
-
     const handleSubmit = async (picture) => {
         if (picture.length > 0) {
             setUser({ ...user, ...picture });
 
         }
-        console.log({ ...user, ...picture });
 
         ref.current?.next();
     };
@@ -647,7 +587,6 @@ function ImageData({ setUser, user, ref }) {
         initialValues: user,
         onSubmit: handleSubmit
     });
-
 
     const styles = StyleSheet.create({
         container: {
@@ -739,12 +678,11 @@ function ImageData({ setUser, user, ref }) {
                         "image/jpeg",
                     ]}
                     maxSizeMB={5}
-                    onFilesChange={(pictures) => setPic(pictures)}
                 />
 
                 <View style={styles.bottomContainer}>
                     <Button style={styles.nextButton} onPress={() => ref.current?.prev()} variant="secondary">Atras</Button>
-                    <Button style={styles.nextButton} onPress={form.submit}>{pic.length ? "Omitir" : "Continuar"}</Button>
+                    <Button style={styles.nextButton} onPress={form.submit}>{isEmpty(form.values.picture) ? "Omitir" : "Continuar"}</Button>
                 </View>
             </Form>
 
@@ -758,13 +696,7 @@ function CreateUser({ setUser, user, ref }) {
     const { width } = useWindowDimensions();
 
     const handleSubmit = async (picture) => {
-        if (picture.length > 0) {
-            setUser({ ...user, ...picture });
-
-        }
-        console.log({ ...user, ...picture });
-
-        ref.current?.next();
+        console.log(user);
     };
 
     const form = useForm({

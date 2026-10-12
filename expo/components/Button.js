@@ -27,7 +27,8 @@ const Button = ({
     disabled = false,
 
     style,
-    textStyle
+    textStyle,
+    customStyle
 }) => {
 
     const { theme } = useTheme();
@@ -61,6 +62,7 @@ const Button = ({
 
     const isPrimary = variant === "primary";
     const isSecondary = variant === "secondary";
+    const isCustom = variant === "custom";
     const isGhost = variant === "ghost";
 
     const iconColor =

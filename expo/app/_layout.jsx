@@ -1,7 +1,20 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { ThemeProvider } from "../theme/themeProvider";
+import { useEffect } from "react";
+import { getToken } from "../services/auth";
 
 export default function RootLayout() {
+    const router = useRouter();
+
+    useEffect(() => {
+        async function checkSession() {
+            const token = await getToken();
+            if (!token) router.replace("/signin");
+        }
+
+        //checkSession();
+    }, []);
+    
     return (
         <ThemeProvider>
             <Stack
@@ -14,7 +27,7 @@ export default function RootLayout() {
                 <Stack.Screen
                     name="signin"
                 />
-                
+
             </Stack>
         </ThemeProvider>
     );

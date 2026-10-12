@@ -129,7 +129,7 @@ export default function LoginScreen() {
                         iconLeft={Mail}
                         style={styles.input}
                         regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
-                        warning="Ingresa un correo electrónico válido."
+                        regexMessage="Ingresa un correo electrónico válido."
                         disabled={buttonsDisabled}
                     />
 
@@ -140,7 +140,7 @@ export default function LoginScreen() {
                         placeholder="Contraseña"
                         secureTextEntry={!showPassword}
                         regex={/^(?=.*[A-Z])(?=.*\d).{6,}$/}
-                        warning="Mínimo 6 caracteres, una mayúscula y un número."
+                        regexMessage="Mínimo 6 caracteres, una mayúscula y un número."
                         style={styles.input}
                         iconLeft={Lock}
                         iconRight={showPassword ? EyeOff : Eye}

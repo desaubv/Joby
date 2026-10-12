@@ -15,6 +15,8 @@ const TabsScreen = ({
     children,
     initialTab = 0,
     scroll = true,
+    position = "bottom",
+    type="default",
     ...props
 }) => {
     const tabs = React.Children.toArray(children).filter(
@@ -31,7 +33,7 @@ const TabsScreen = ({
         tabs,
     };
 
-    return (
+    return position == "bottom" ? (
         <TabsContext.Provider value={contextValue}>
             <Screen
                 centered
@@ -42,13 +44,36 @@ const TabsScreen = ({
             </Screen>
 
             <NavigationBar
+                position={position}
                 tabs={tabs.map(tab => ({
                     label: tab.props.label,
                     icon: tab.props.icon,
                 }))}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
+                type={type}
             />
+        </TabsContext.Provider>
+    ) : (
+        <TabsContext.Provider value={contextValue}>
+            <NavigationBar
+                position={position}
+                tabs={tabs.map(tab => ({
+                    label: tab.props.label,
+                    icon: tab.props.icon,
+                }))}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                type={type}
+            />
+
+            <Screen
+                centered
+                scroll={scroll}
+                {...props}
+            >
+                {currentTab?.props.component}
+            </Screen>
         </TabsContext.Provider>
     );
 };

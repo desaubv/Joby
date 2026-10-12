@@ -356,9 +356,9 @@ export default function FileUpload({
             borderStyle: "dashed",
             borderColor: showError
                 ? theme.colors.error
-                : theme.colors.input.border,
+                : theme.colors.border,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             opacity: isDisabled ? 0.6 : 1,
         },
 
@@ -391,9 +391,9 @@ export default function FileUpload({
             alignItems: "center",
             padding: 12,
             borderWidth: 1,
-            borderColor: theme.colors.input.border,
+            borderColor: theme.colors.border,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             gap: 10,
         },
 
@@ -401,7 +401,7 @@ export default function FileUpload({
             width: 56,
             height: 56,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.border,
+            backgroundColor: theme.colors.border,
         },
 
         fileInfo: {

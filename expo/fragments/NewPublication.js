@@ -6,9 +6,11 @@ import { useTheme } from '../theme/useTheme';
 import UserImage from '../components/UserImage';
 import Input from '../components/form/Input';
 import { Image as ImageIcon } from 'lucide-react-native';
+import SkeletonBox from '../components/sketeton/SkeletonBox';
+import SkeletonText from '../components/sketeton/SkeletonText';
 
 
-const NewPublication = () => {
+const NewPublication = ({ user = null }) => {
     const { theme } = useTheme();
 
     const handleSubmitImage = () => {
@@ -51,14 +53,26 @@ const NewPublication = () => {
             padding: 1
         }
     });
-    return (
+    return user ? (
         <View style={styles.container}>
-            <UserImage/>
+            <UserImage />
             <Input
                 style={styles.input}
                 iconRight={ImageIcon}
                 placeholder="¿Qué quieres compartir?"
                 onIconRightPress={handleSubmitImage}
+            />
+        </View>
+    ) : (
+        <View style={styles.container}>
+            <SkeletonBox
+                width={50}
+                height={50}
+                radius={100}
+            />
+            <SkeletonBox
+                style={styles.input}
+                height={60}
             />
         </View>
     );

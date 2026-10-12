@@ -64,7 +64,7 @@ const RadioCard = ({
             borderWidth: theme.thicknesses.sm,
             borderColor: selected
                 ? theme.colors.primary
-                : theme.colors.input.border,
+                : theme.colors.border,
 
             opacity: disabled ? 0.5 : 1
         },
@@ -108,7 +108,7 @@ const RadioCard = ({
             borderWidth: theme.thicknesses.sm,
             borderColor: selected
                 ? theme.colors.primary
-                : theme.colors.input.border,
+                : theme.colors.border,
 
             alignItems: "center",
             justifyContent: "center",

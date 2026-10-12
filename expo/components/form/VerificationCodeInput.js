@@ -28,7 +28,7 @@ export default function VerificationCodeInput({
     required = false,
     requiredMessage = "Debes ingresar el código completo.",
     regex,
-    warning = "El código no tiene un formato válido.",
+    regexMessage = "El código no tiene un formato válido.",
 
     editable = true,
     disabled = false,
@@ -70,7 +70,7 @@ export default function VerificationCodeInput({
         required,
         requiredMessage,
         regex: validationRegex,
-        warning,
+        regexMessage,
     });
 
     // Detecta si el campo está conectado a un Form.
@@ -220,7 +220,7 @@ export default function VerificationCodeInput({
         const valid = validationRegex.test(code);
         validationRegex.lastIndex = 0;
 
-        return valid ? null : warning;
+        return valid ? null : regexMessage;
     }, [
         isFormConnected,
         touched,
@@ -229,14 +229,14 @@ export default function VerificationCodeInput({
         requiredMessage,
         length,
         validationRegex,
-        warning,
+        regexMessage,
     ]);
 
     const validationMessage = isFormConnected
         ? formError
         : localError;
 
-    const showWarning = Boolean(validationMessage);
+    const showregexMessage = Boolean(validationMessage);
 
     const styles = StyleSheet.create({
         wrapper: {
@@ -264,9 +264,9 @@ export default function VerificationCodeInput({
             alignItems: "center",
             justifyContent: "center",
             borderWidth: theme.thicknesses.xs,
-            borderColor: theme.colors.input.border,
+            borderColor: theme.colors.border,
             borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.input.background,
+            backgroundColor: theme.colors.surface,
             opacity: isDisabled ? 0.6 : 1,
         },
 
@@ -279,7 +279,7 @@ export default function VerificationCodeInput({
             borderColor: theme.colors.primary,
         },
 
-        cellWarning: {
+        cellregexMessage: {
             borderColor: theme.colors.error,
         },
 
@@ -294,7 +294,7 @@ export default function VerificationCodeInput({
             color: theme.colors.text.text,
         },
 
-        warning: {
+        regexMessage: {
             marginTop: 6,
             marginLeft: 4,
             fontSize: theme.text.smallSize,
@@ -323,7 +323,7 @@ export default function VerificationCodeInput({
                             styles.cell,
                             character && styles.cellFilled,
                             focusedIndex === index && styles.cellFocused,
-                            showWarning && styles.cellWarning,
+                            showregexMessage && styles.cellregexMessage,
                             inputStyle,
                         ]}
                         onPress={() => focusInput(index)}
@@ -366,8 +366,8 @@ export default function VerificationCodeInput({
                 ))}
             </View>
 
-            {showWarning && (
-                <Text style={styles.warning}>
+            {showregexMessage && (
+                <Text style={styles.regexMessage}>
                     {validationMessage}
                 </Text>
             )}

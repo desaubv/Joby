@@ -24,7 +24,7 @@ export function useFormField({
     name,
     required = false,
     regex,
-    warning = "El formato no es válido.",
+    regexMessage = "El formato no es válido.",
     requiredMessage = "Este campo es obligatorio.",
 }) {
     const form = useContext(FormContext);
@@ -42,11 +42,11 @@ export function useFormField({
             const valid = regex.test(String(value));
             regex.lastIndex = 0;
 
-            if (!valid) return warning;
+            if (!valid) return regexMessage;
         }
 
         return null;
-    }, [required, requiredMessage, regex, warning]);
+    }, [required, requiredMessage, regex, regexMessage]);
 
     useEffect(() => {
         if (!form || !name) return;

@@ -2,10 +2,11 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/useTheme';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import NewPublication from '../../fragments/NewPublication';
-
 import BasicLayout from '../../components/layout/Basic';
+import Publication from '../../fragments/Publication';
 import HistoryBall from '../../fragments/HistoryBall';
 import Line from '../../components/layout/Line';
 import Text from '../../components/Text/Text';
@@ -13,10 +14,10 @@ import Button from '../../components/Button';
 
 import { Bell, Search, User2 } from 'lucide-react-native';
 import placeholder from "../../assets/placeholders/history.avif"
-import Publication from '../../fragments/Publication';
 
 const HomeScreen = () => {
     const { theme, setTheme } = useTheme();
+    const insets = useSafeAreaInsets();
 
     const styles = StyleSheet.create({
         header: {
@@ -44,7 +45,7 @@ const HomeScreen = () => {
         container: {
             width: "100%",
             alignItems: "center",
-
+            marginBottom: insets.bottom + theme.spacing.md
         },
 
         histories: {
@@ -82,43 +83,36 @@ const HomeScreen = () => {
                     >
                         <View style={styles.histories}>
                             <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
+                                history={{
+                                    image: placeholder,
+                                    text: "Crear publicación"
+                                }}
                             />
 
                             <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
+                                history={{
+                                    image: placeholder,
+                                    text: "Crear publicación"
+                                }}
                             />
 
                             <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
+                                history={{
+                                    image: placeholder,
+                                    text: "Crear publicación"
+                                }}
                             />
 
                             <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
-                            />
-                            <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
+                                history={{
+                                    image: placeholder,
+                                    text: "Crear publicación"
+                                }}
                             />
 
-                            <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
-                            />
-
-                            <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
-                            />
-
-                            <HistoryBall
-                                image={placeholder}
-                                text="Crear publicación"
-                            />
+                            <HistoryBall/>
+                            <HistoryBall/>
+                            <HistoryBall/>
                         </View>
                     </ScrollView>
 
@@ -126,7 +120,20 @@ const HomeScreen = () => {
                     <Line
                         thickness={0.5}
                         width={theme.size.all}
-                        color={theme.colors.input.border}
+                        color={theme.colors.border}
+                    />
+
+                    <Publication
+                        image={placeholder}
+                        publication={{
+                            date: "Hace 2h",
+                            user: {
+                                avatar: placeholder,
+                                name: "Juan Julian",
+                                role: "Desarrollador"
+                            },
+                            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                        }}
                     />
 
                     <Publication
@@ -137,29 +144,13 @@ const HomeScreen = () => {
                             name: "Juan Julian",
                             role: "Desarrollador"
                         }}
-                        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    />
-                    <Publication
-                        date={"Hace 2h"}
-                        user={{
-                            avatar: placeholder,
-                            name: "Juan Julian",
-                            role: "Desarrollador"
-                        }}
-                        content="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                     />
 
-                    <Publication
-                        image={placeholder}
-                        date={"Hace 2h"}
-                        user={{
-                            avatar: placeholder,
-                            name: "Juan Julian",
-                            role: "Desarrollador"
-                        }}
-                    />
 
-                    
+                    <Publication />
+                    <Publication />
+                    <Publication />
+                    <Publication />
                 </View>
             </ScrollView>
 

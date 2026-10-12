@@ -14,13 +14,38 @@ export default function NavigationBar({
     tabs = [],
     activeTab,
     onTabChange,
+    position="bottom",
+    type="default"
 }) {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
 
+    const isSimple = type === "simple";
 
     const styles = StyleSheet.create({
         container: {
+            position: "absolute",
+            bottom: insets.bottom,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-around",
+            paddingHorizontal: 8,
+            paddingVertical: 8,
+            backgroundColor: theme.colors.surface,
+        },
+
+        containerTop: {
+            position: "absolute",
+            top: insets.top + theme.spacing.md,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-around",
+            paddingHorizontal: 8,
+            paddingVertical: 8,
+            backgroundColor: theme.colors.surface,
+        },
+
+        containerBottom: {
             position: "absolute",
             bottom: insets.bottom,
             flexDirection: "row",
@@ -40,18 +65,22 @@ export default function NavigationBar({
 
         item: {
             flex: 1,
-            minHeight: 56,
+            minHeight: isSimple ? 35 : 56,
             alignItems: "center",
             justifyContent: "center",
             gap: 4,
-            borderRadius: theme.radius.md,
-            paddingVertical: 6,
+            borderRadius: isSimple ? 0 : theme.radius.md,
+            paddingVertical: isSimple ? 0 : 6,
+            borderBottomWidth: isSimple ? 3 : 0,
+            borderBottomColor: "transparent",
+
         },
         activeItem: {
-            backgroundColor: `${theme.colors.primary}12`,
+            backgroundColor: isSimple ? "transparent" : `${theme.colors.primary}12`,
+            borderBottomColor: isSimple ? theme.colors.primary : "transparent",
         },
         label: {
-            fontSize: theme.text.smallSize,
+            fontSize: isSimple ? theme.text.baseSize : theme.text.smallSize * 0.8,
             textAlign: "center",
         },
         activeLabel: {
@@ -60,7 +89,7 @@ export default function NavigationBar({
     });
 
     return (
-        <View style={styles.container}>
+        <View style={ position == "bottom" ? styles.containerBottom : styles.containerTop}>
             {tabs.map(({ label, icon: Icon }, index) => {
                 const focused = activeTab === index;
                 const color = focused
@@ -91,7 +120,7 @@ export default function NavigationBar({
                         <Text
                             style={[
                                 styles.label,
-                                { color, fontSize: theme.text.smallSize * 0.8 },
+                                { color },
                                 focused && styles.activeLabel,
                             ]}
                             numberOfLines={1}
