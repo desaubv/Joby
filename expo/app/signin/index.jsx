@@ -97,7 +97,7 @@ export default function LoggerScreen() {
                 />
 
                 <View style={styles.bottomContainer}>
-                    <Button href="signin/login">Iniciar Sesión</Button>
+                    <Button href="signin/login">Iniciar sesión</Button>
                     <Button href="signin/register" variant="secondary">Crear cuenta</Button>
 
                     <Button href="signin/register/company" variant="ghost" iconRight={ArrowRight}>¿Eres una empresa?</Button>

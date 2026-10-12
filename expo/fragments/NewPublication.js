@@ -16,7 +16,7 @@ const NewPublication = ({ user = null }) => {
     const handleSubmitImage = () => {
 
     }
-
+    
     const styles = StyleSheet.create({
         container: {
             width: theme.size.all,

@@ -115,7 +115,7 @@ export default function LoginScreen() {
 
 
                 <View style={styles.basicContainer}>
-                    <Title style={{ textAlign: "start" }}>Iniciar Sesión</Title>
+                    <Title style={{ textAlign: "start" }}>Iniciar sesión</Title>
                     <Text style={{ marginBottom: theme.spacing.md, marginTop: -theme.spacing.sm }} variant="secondary">Ingresa tu cuenta para continuar.</Text>
 
 
@@ -157,7 +157,7 @@ export default function LoginScreen() {
                         style={styles.button}
                         onPress={form.submit}
                         disabled={form.isSubmitting || buttonsDisabled}
-                    >Iniciar Sesión</Button>
+                    >Iniciar sesión</Button>
                 </View>
 
                 <Line

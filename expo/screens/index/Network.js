@@ -16,12 +16,21 @@ import placeholder from "../../assets/placeholders/history.avif"
 import Publication from '../../fragments/Publication';
 import HeaderTitle from '../../fragments/HeaderTitle';
 import TabsScreen, { Tab } from '../../components/layout/Tabs';
-import ConnectionTab from '../../tabs/network/ConnectionTab';
 
 const NetworkScreen = () => {
     const { theme } = useTheme();
 
     const styles = StyleSheet.create({
+        screen: {
+            backgroundColor: theme.colors.surface,
+            width: "100%",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            marginTop: 40,
+            paddingVertical: -100,
+            paddingHorizontal: 0,
+        },
+
         header: {
             width: theme.size.all,
             flexDirection: "row",
@@ -63,17 +72,6 @@ const NetworkScreen = () => {
     return (
         <BasicLayout>
             <HeaderTitle>Mi red</HeaderTitle>
-
-            <TabsScreen initialTab={0} position="top" type="simple">
-                <Tab
-                    label="Conexiones"
-                    component={<ConnectionTab />}
-                />
-
-                <Tab
-                    label="Solicitudes"
-                />
-            </TabsScreen>
 
         </BasicLayout>
     );

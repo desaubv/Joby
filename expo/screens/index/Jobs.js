@@ -58,15 +58,6 @@ const JobsScreen = () => {
         <BasicLayout>
             <HeaderTitle>Empleos</HeaderTitle>
 
-            <TabsScreen initialTab={0} position="top" type="simple">
-                <Tab
-                    label="Encontrar"
-                />
-
-                <Tab
-                    label="Postulaciones"
-                />
-            </TabsScreen>
 
         </BasicLayout>
     );

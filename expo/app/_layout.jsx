@@ -12,7 +12,7 @@ export default function RootLayout() {
             if (!token) router.replace("/signin");
         }
 
-        //checkSession();
+        checkSession();
     }, []);
     
     return (
