@@ -1,23 +1,15 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'theme/useTheme';
 
-import NewPublication from '../../fragments/NewPublication';
-
+import UserProfileFragment from 'fragments/UserProfile';
 import BasicLayout from 'components/layout/Basic';
-import HistoryBall from '../../fragments/HistoryBall';
-import Line from 'components/layout/Line';
-import Text from 'components/Text/Text';
-import Button from 'components/ui/Button';
-
-import { Bell, Search, User2 } from 'lucide-react-native';
-import placeholder from "../../../assets/placeholders/history.avif"
-import Publication from '../../fragments/Publication';
-import HeaderTitle from '../../fragments/HeaderTitle';
 
 const ProfileScreen = () => {
     const { theme } = useTheme();
+    const insets = useSafeAreaInsets();
 
     const styles = StyleSheet.create({
         header: {
@@ -53,22 +45,21 @@ const ProfileScreen = () => {
             height: "auto",
             flexDirection: "row",
             gap: 15,
-            marginTop: theme.spacing.md
+            marginTop: theme.spacing.md,
+            marginBottom: insets.bottom + theme.spacing.sm
         }
     });
 
 
     return (
-        <BasicLayout>
-            <HeaderTitle>Mi Perfil</HeaderTitle>
-
+        <BasicLayout style={{paddingVertical: 0}}>
             <ScrollView
                 showsVerticalScrollIndicator
                 style={{ width: "100%" }}
             >
                 <View style={styles.container}>
                     
-
+                <UserProfileFragment/>
                     
                 </View>
             </ScrollView>

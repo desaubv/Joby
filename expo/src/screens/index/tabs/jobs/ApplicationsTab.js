@@ -2,12 +2,11 @@ import React from 'react';
 import TabLayout from 'components/layout/Tab';
 
 import { useTheme } from 'theme/useTheme';
-import JobPublication from 'fragments/JobPublication';
+
+import JobApplicationCard from 'fragments/JobApplicationCard';
+import Line from 'components/layout/Line';
 
 import jobyLogo from "assets/logos/icon.png"
-import SearchAndFilter from 'fragments/SearchAndFilter';
-import JobApplication from 'fragments/JobApplication';
-import Line from 'components/layout/Line';
 
 const ApplicationsTab = () => {
     const { theme } = useTheme();
@@ -19,7 +18,18 @@ const ApplicationsTab = () => {
                 text="Activas"
                 width={theme.size.all}
             />
-            <JobApplication
+            <JobApplicationCard
+                job={{
+                    company: {
+                        name: "Tech Solutions",
+                        logo: null,
+                    },
+                    title: "Desarrollador Backend",
+                    status: "closed",
+                    date: "25 sep. 2026"
+                }}
+            />
+            <JobApplicationCard
                 job={{
                     company: {
                         name: "Tech Solutions",
@@ -31,7 +41,7 @@ const ApplicationsTab = () => {
                 }}
             />
 
-            <JobApplication
+            <JobApplicationCard
                 job={{
                     company: {
                         name: "Joby",
@@ -42,8 +52,8 @@ const ApplicationsTab = () => {
                     date: "14 oct. 2026"
                 }}
             />
-            
-            <JobApplication
+
+            <JobApplicationCard
                 job={{
                     company: {
                         name: "Tech Solutions",
@@ -55,7 +65,7 @@ const ApplicationsTab = () => {
                 }}
             />
 
-            <JobApplication
+            <JobApplicationCard
                 job={{
                     company: {
                         name: "Joby",
@@ -67,20 +77,20 @@ const ApplicationsTab = () => {
                 }}
             />
 
-            
+
             <Line
                 top={25}
                 text="Archivadas."
                 width={theme.size.all}
             />
 
-            <JobApplication />
-            <JobApplication />
-            <JobApplication />
-            <JobApplication />
-            <JobApplication />
-            <JobApplication />
-            <JobApplication />
+            <JobApplicationCard />
+            <JobApplicationCard />
+            <JobApplicationCard />
+            <JobApplicationCard />
+            <JobApplicationCard />
+            <JobApplicationCard />
+            <JobApplicationCard />
         </TabLayout>
     );
 };

@@ -2,10 +2,11 @@ import React from 'react';
 import TabLayout from 'components/layout/Tab';
 
 import { useTheme } from 'theme/useTheme';
-import JobPublication from 'fragments/JobPublication';
+
+import SearchAndFilter from 'fragments/SearchAndFilter';
+import JobListingCard from 'fragments/JobListingCard';
 
 import jobyLogo from "assets/logos/icon.png"
-import SearchAndFilter from 'fragments/SearchAndFilter';
 
 const SuggestionTab = () => {
     const { theme } = useTheme();
@@ -42,7 +43,7 @@ const SuggestionTab = () => {
                     },
                 ]}
             />
-            <JobPublication
+            <JobListingCard
                 job={{
                     company: {
                         name: "Tech Solutions",
@@ -55,7 +56,7 @@ const SuggestionTab = () => {
                 }}
             />
 
-            <JobPublication
+            <JobListingCard
                 job={{
                     company: {
                         name: "Joby",
@@ -67,38 +68,38 @@ const SuggestionTab = () => {
                     modality: "hibrid", // "remote", "presencial", "special"
                 }}
             />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
-            <JobPublication />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
+            <JobListingCard />
         </TabLayout>
     );
 };

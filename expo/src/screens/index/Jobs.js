@@ -14,14 +14,16 @@ const JobsScreen = () => {
 
             <TabsScreen position="top" variant="simple" contentParent="tab">
                 <Tab
+                    label="Para ti"
+                    component={<SuggestionTab />}
+                />
+
+                <Tab
                     label="Mis postulaciones"
                     component={<ApplicationsTab />}
                 />
 
-                <Tab
-                    label="Sugerencias"
-                    component={<SuggestionTab />}
-                />
+                
             </TabsScreen>
         </BasicLayout>
     );

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import TabLayout from 'components/layout/Tab';
+
 import { useTheme } from 'theme/useTheme';
+
+import NetworkMemberCard from 'fragments/NetworkMemberCard';
 import SearchAndFilter from 'fragments/SearchAndFilter';
-import Line from 'components/layout/Line';
-import ConnectionUser from 'fragments/ConnectionUser';
+import TabLayout from 'components/layout/Tab';
 import Bold from 'components/Text/Bold';
 
 import placeholder from "assets/placeholders/history.avif"
@@ -18,63 +19,63 @@ const ConnectionTab = () => {
             <SearchAndFilter />
             <Bold style={{width: theme.size.all, marginTop: theme.spacing.sm}}>Tus conexiones ({connections.length})</Bold>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
             
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: null,
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Diego Esau",
                 lastname: "Barajas",
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
 
-            <ConnectionUser user={{
+            <NetworkMemberCard user={{
                 name: "Julian",
                 lastname: "Dominguez",
                 avatar: placeholder,
                 role: "Desarrollador fullstack"
             }}/>
-            <ConnectionUser />
-            <ConnectionUser />
-            <ConnectionUser />
+            <NetworkMemberCard />
+            <NetworkMemberCard />
+            <NetworkMemberCard />
         </TabLayout>
     );
 };

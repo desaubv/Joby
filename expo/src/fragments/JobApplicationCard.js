@@ -25,13 +25,14 @@ import Chip from "components/ui/Chip";
 const defaultPublication = {
     company: null,
     title: null,
-    status: "review", // "rejected", "review", "interview", "accepted"
+    status: "review", // "closed", "rejected", "review", "interview", "accepted"
 }
 
 const StatusChip = ({ status }) => {
     const { theme } = useTheme();
 
     const statusColor = {
+        closed: "#2c2222",
         rejected: "#eb9494",
         review: "#dc946b",
         interview: "#94b1c8",
@@ -39,6 +40,7 @@ const StatusChip = ({ status }) => {
     }
 
     const statusSpanish = {
+        closed: "Finalizada",
         rejected: "Rechazada",
         review: "En revisión",
         interview: "Entrevista",
@@ -52,7 +54,7 @@ const StatusChip = ({ status }) => {
     )
 }
 
-const JobApplication = ({ job = null }) => {
+const JobApplicationCardCard = ({ job = null }) => {
     const {
         company,
         title,
@@ -283,4 +285,4 @@ const JobApplication = ({ job = null }) => {
     );
 };
 
-export default JobApplication;
+export default JobApplicationCardCard;

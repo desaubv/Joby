@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from 'theme/useTheme';
 
-const BasicLayout = ({ children }) => {
+const BasicLayout = ({ children, style={} }) => {
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
     
@@ -29,7 +29,7 @@ const BasicLayout = ({ children }) => {
     })
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             {children}
         </View>
     );

@@ -32,7 +32,7 @@ const defaultPublication = {
     modality: "hibrid", // "remote", "presencial", "special"
 }
 
-const JobPublication = ({ job = null }) => {
+const JobListingCard = ({ job = null }) => {
     const {
         company,
         title,
@@ -240,7 +240,7 @@ const JobPublication = ({ job = null }) => {
 
                     <View style={styles.modality}>
                         {
-                            job.requiredSkills.map((skill) => <Chip>{skill}</Chip>)
+                            job.requiredSkills.map((skill) => (<Chip key={`chip-${skill}`}>{skill}</Chip>))
                         }
                     </View>
 
@@ -248,29 +248,6 @@ const JobPublication = ({ job = null }) => {
             </View>
         </TouchableOpacity>
     ) : (
-        // <View style={styles.container}>
-        //     {/* Encabezado */}
-        //     <View style={styles.information}>
-
-        //         <SkeletonBox
-        //             width={44}
-        //             height={44}
-        //             radius={22}
-        //         />
-
-        //         <View style={styles.companyInfo}>
-        //             <SkeletonText width="30%" />
-        //             <SkeletonText width="60%" />
-        //         </View>
-        //     </View>
-
-        //     <SkeletonText
-        //         lastLineWidth="70%"
-        //         numberOfLines={3}
-        //     />
-
-        //     {/* Acciones */}
-        // </View>
         <View style={styles.container}>
             {/* Encabezado */}
             <View
@@ -320,4 +297,4 @@ const JobPublication = ({ job = null }) => {
     );
 };
 
-export default JobPublication;
+export default JobListingCard;

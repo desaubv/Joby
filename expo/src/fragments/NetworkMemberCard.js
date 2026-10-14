@@ -27,7 +27,7 @@ const defaultUser = {
     role: null
 }
 
-const ConnectionUser = ({ user = null }) => {
+const NetworkMemberCard = ({ user = null }) => {
     const { theme } = useTheme();
 
     const handleViewProfile = () => {
@@ -224,4 +224,4 @@ const ConnectionUser = ({ user = null }) => {
     );
 };
 
-export default ConnectionUser;
+export default NetworkMemberCard;
