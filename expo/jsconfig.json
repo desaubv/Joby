@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "app/*": ["./app/*"],
+            "assets/*": ["./assets/*"],
+            "constants/*": ["./constants/*"],
+            "components/*": ["./src/components/*"],
+            "fragments/*": ["./src/fragments/*"],
+            "screens/*": ["./src/screens/*"],
+            "services/*": ["./src/services/*"],
+            "theme/*": ["./theme/*"]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

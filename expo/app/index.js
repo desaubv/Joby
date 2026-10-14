@@ -1,11 +1,11 @@
 import { House, UsersRound, BriefcaseBusiness, UserRound, Bell } from "lucide-react-native";
 
-import TabsScreen, { Tab } from "../components/layout/Tabs";
-import HomeScreen from "../screens/index/Home";
-import NetworkScreen from "../screens/index/Network";
-import JobsScreen from "../screens/index/Jobs";
-import NotificationScreen from "../screens/index/Notifications";
-import ProfileScreen from "../screens/index/Profile";
+import TabsScreen, { Tab } from "components/layout/Tabs";
+import HomeScreen from "screens/index/Home";
+import NetworkScreen from "screens/index/Network";
+import JobsScreen from "screens/index/Jobs";
+import NotificationScreen from "screens/index/Notifications";
+import ProfileScreen from "screens/index/Profile";
 
 export default function Index() {
     return (

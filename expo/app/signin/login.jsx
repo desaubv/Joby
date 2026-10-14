@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
-import { useTheme } from "../../theme/useTheme";
-import useForm from "../../components/form/useForm";
+import { useTheme } from "theme/useTheme";
+import useForm from "components/form/useForm";
 
-import ScreenLayout from "../../components/layout/Screen";
-import AppImage from "../../components/AppImage";
-import Title from "../../components/Text/Title";
-import Input from "../../components/form/Input";
-import Line from "../../components/layout/Line";
+import ScreenLayout from "components/layout/Screen";
+import AppImage from "components/ui/AppImage";
+import Title from "components/Text/Title";
+import Input from "components/form/Input";
+import Line from "components/layout/Line";
 import icon from "../../assets/logos/icon.png";
-import Text from "../../components/Text/Text";
-import Form from "../../components/form/Form";
-import Button from "../../components/Button";
+import Text from "components/Text/Text";
+import Form from "components/form/Form";
+import Button from "components/ui/Button";
 
 import { Mail, Lock, EyeOff, Eye } from "lucide-react-native";
 import { AntDesign } from "@expo/vector-icons";

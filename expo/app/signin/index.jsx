@@ -1,12 +1,12 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
-import { useTheme } from "../../theme/useTheme";
+import { useTheme } from "theme/useTheme";
 
-import ScreenLayout from "../../components/layout/Screen";
-import AppImage from "../../components/AppImage";
-import Bold from "../../components/Text/Bold";
-import Text from "../../components/Text/Text";
-import Button from "../../components/Button";
+import ScreenLayout from "components/layout/Screen";
+import AppImage from "components/ui/AppImage";
+import Bold from "components/Text/Bold";
+import Text from "components/Text/Text";
+import Button from "components/ui/Button";
 
 import banner from "../../assets/images/auth_banner.png";
 import icon from "../../assets/logos/icon.png";

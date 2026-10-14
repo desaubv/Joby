@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
-import { ThemeProvider } from "../theme/themeProvider";
 import { useEffect } from "react";
-import { getToken } from "../services/auth";
+import { ThemeProvider } from "theme/themeProvider";
+import { getToken } from "services/auth";
 
 export default function RootLayout() {
     const router = useRouter();
@@ -12,7 +12,7 @@ export default function RootLayout() {
             if (!token) router.replace("/signin");
         }
 
-        checkSession();
+        //checkSession();
     }, []);
     
     return (

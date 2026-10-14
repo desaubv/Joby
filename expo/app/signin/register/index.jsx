@@ -2,15 +2,15 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 
-import { useTheme } from "../../../theme/useTheme";
+import { useTheme } from "theme/useTheme";
 
-import ScreenLayout from "../../../components/layout/Screen";
-import RadioCard from "../../../components/form/RadioCard";
-import AppImage from "../../../components/AppImage";
-import Title from "../../../components/Text/Title";
+import ScreenLayout from "components/layout/Screen";
+import RadioCard from "components/form/RadioCard";
+import AppImage from "components/ui/AppImage";
+import Title from "components/Text/Title";
 import icon from "../../../assets/logos/icon.png";
-import Text from "../../../components/Text/Text";
-import Button from "../../../components/Button";
+import Text from "components/Text/Text";
+import Button from "components/ui/Button";
 
 import { ChevronLeft, User, BuildingComplex } from "lucide-react-native";
 

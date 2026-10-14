@@ -2,17 +2,17 @@ import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import { useTheme } from "../../../theme/useTheme";
-import useForm from "../../../components/form/useForm";
+import { useTheme } from "theme/useTheme";
+import useForm from "components/form/useForm";
 
-import ScreenLayout from "../../../components/layout/Screen";
-import AppImage from "../../../components/AppImage"; 
-import Title from "../../../components/Text/Title";
-import Input from "../../../components/form/Input";
+import ScreenLayout from "components/layout/Screen";
+import AppImage from "components/ui/AppImage"; 
+import Title from "components/Text/Title";
+import Input from "components/form/Input";
 import icon from "../../../assets/logos/icon.png";
-import Form from "../../../components/form/Form";
-import Text from "../../../components/Text/Text";
-import Button from "../../../components/Button";
+import Form from "components/form/Form";
+import Text from "components/Text/Text";
+import Button from "components/ui/Button";
 
 import { Mail, ArrowLeft } from "lucide-react-native";
 

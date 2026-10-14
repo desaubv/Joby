@@ -2,24 +2,24 @@ import { ScrollView, StyleSheet, useWindowDimensions, View } from "react-native"
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
-import { useTheme } from "../../../theme/useTheme";
+import { useTheme } from "theme/useTheme";
 
-import VerificationCodeInput from "../../../components/form/VerificationCodeInput";
-import ScreenLayout from "../../../components/layout/Screen";
-import Stepper from "../../../components/layout/Stepper";
-import Title from "../../../components/Text/Title";
-import Input from "../../../components/form/Input";
-import Select from "../../../components/form/Select";
-import Bold from "../../../components/Text/Bold";
-import Text from "../../../components/Text/Text";
-import Button from "../../../components/Button";
-import Form from "../../../components/form/Form";
+import VerificationCodeInput from "components/form/VerificationCodeInput";
+import ScreenLayout from "components/layout/Screen";
+import Stepper from "components/layout/Stepper";
+import Title from "components/Text/Title";
+import Input from "components/form/Input";
+import Select from "components/form/Select";
+import Bold from "components/Text/Bold";
+import Text from "components/Text/Text";
+import Button from "components/ui/Button";
+import Form from "components/form/Form";
 
 import { ChevronLeft } from "lucide-react-native";
-import useForm from "../../../components/form/useForm";
-import FileUpload from "../../../components/form/FileUpload";
+import useForm from "components/form/useForm";
+import FileUpload from "components/form/FileUpload";
 import { selectOptions } from "../../../constants/selectOptions";
-import { isEmpty } from "../../../services/utilities";
+import { isEmpty } from "services/utilities";
 
 export default function RegisterCompanyScreen() {
 

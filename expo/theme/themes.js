@@ -47,6 +47,7 @@ const baseTheme = {
         sm: 6,
         md: 12,
         lg: 24,
+        full: 100
     },
 
     colors: {
@@ -64,10 +65,7 @@ const baseTheme = {
                 ghost: "#b9b4b4",
             },
 
-            input: {
-                border: "#D8E1EA",
-                background: "#FFFFFF",
-            },
+            border: "#D8E1EA",
 
             success: "#6ac668",
             warning: "#dbec5e",
