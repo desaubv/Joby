@@ -4,17 +4,9 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from 'theme/useTheme';
 
-import NewPublication from '../../fragments/NewPublication';
-
 import BasicLayout from 'components/layout/Basic';
-import HistoryBall from '../../fragments/HistoryBall';
-import Line from 'components/layout/Line';
-import Text from 'components/Text/Text';
-import Button from 'components/ui/Button';
 
-import { Bell, Search, User2 } from 'lucide-react-native';
 import placeholder from "../../../assets/placeholders/history.avif"
-import Publication from '../../fragments/Publication';
 import HeaderTitle from '../../fragments/HeaderTitle';
 import Notification from 'fragments/Notification';
 

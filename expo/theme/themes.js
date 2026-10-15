@@ -119,10 +119,7 @@ export const themes = {
                 button: "#f3f6fd"
             },
 
-            input: {
-                border: "#767a7e",
-                background: "#1E1E1E",
-            },
+            border: "#767a7e",
             
 
             success: "#00FF00",
@@ -150,10 +147,7 @@ export const themes = {
                 ghost: "#FFFFFF",
             },
 
-            input: {
-                border: "#FFFFFF",
-                background: "#FFFFFF",
-            },
+            border: "#FFFFFF",
 
             success: "#00FF00",
             warning: "#FFFF00",

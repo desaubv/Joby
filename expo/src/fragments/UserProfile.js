@@ -17,16 +17,17 @@ import {
     MapPin,
     Plus,
     MessageCircle,
+    Pencil,
 } from "lucide-react-native";
 
 import { useTheme } from "theme/useTheme";
+import Button from "components/ui/Button";
+import { useRouter } from "expo-router";
 
 const UserProfileFragment = ({
     user = {},
     isOwnProfile = false,
     isConnected = false,
-    onBack,
-    onSettings,
     onMore,
     onConnect,
     onMessage,
@@ -34,6 +35,8 @@ const UserProfileFragment = ({
 }) => {
     const { theme } = useTheme();
     const colors = theme.colors;
+
+    const router = useRouter();
 
     const styles = StyleSheet.create({
         container: {
@@ -104,7 +107,7 @@ const UserProfileFragment = ({
         },
 
         name: {
-            color: colors.text,
+            color: colors.text.text,
             fontSize: 20,
             fontWeight: "700",
         },
@@ -114,7 +117,7 @@ const UserProfileFragment = ({
         },
 
         position: {
-            color: colors.text,
+            color: colors.text.text,
             fontSize: 14,
             marginTop: 3,
         },
@@ -137,7 +140,7 @@ const UserProfileFragment = ({
         },
 
         description: {
-            color: colors.text,
+            color: colors.text.text,
             fontSize: 14,
             lineHeight: 20,
             marginTop: 12,
@@ -190,7 +193,7 @@ const UserProfileFragment = ({
         },
 
         statValue: {
-            color: colors.text,
+            color: colors.text.text,
             fontSize: 16,
             fontWeight: "700",
         },
@@ -250,6 +253,10 @@ const UserProfileFragment = ({
     const skills = user.skills || [];
     const visibleSkills = skills.slice(0, 4);
     const extraSkills = Math.max(0, skills.length - visibleSkills.length);
+
+    const onSettings = () => {
+        router.push("/settings");
+    }
 
     const Stat = ({ value, label }) => (
         <View style={styles.stat}>
@@ -360,6 +367,17 @@ const UserProfileFragment = ({
                             fill={colors.surface}
                         />
                     )}
+
+                    {
+                        isOwnProfile && (
+                            <Button
+                                icon={Pencil}
+                                variant="ghost"
+                            >
+                                
+                            </Button>
+                        )
+                    }
                 </View>
 
                 <Text style={styles.position}>

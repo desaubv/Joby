@@ -24,7 +24,7 @@ const TabsScreen = ({
         child => React.isValidElement(child) && child.type === Tab
     );
 
-    const [activeTab, setActiveTab] = useState(initialTab);
+    const [activeTab, setActiveTab] = useState(parseInt(initialTab) || 0);
 
     const currentTab = tabs[activeTab] ?? tabs[0];
 
